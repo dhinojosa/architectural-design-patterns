@@ -169,6 +169,11 @@
             <artifactId>jansi</artifactId>
             <version>2.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty-no-dependencies</artifactId>
+            <version>5.13.2</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -179,7 +184,7 @@
                 <configuration>
                     <serverPort>1080</serverPort>
                     <logLevel>DEBUG</logLevel>
-                    <initializationClass>org.mockserver.maven.ExampleInitializationClass</initializationClass>
+<!--                    <initializationClass>org.mockserver.maven.ExampleInitializationClass</initializationClass>-->
                 </configuration>
                 <executions>
                     <execution>
