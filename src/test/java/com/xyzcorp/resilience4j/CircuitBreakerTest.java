@@ -63,7 +63,8 @@ public class CircuitBreakerTest {
                 .permittedNumberOfCallsInHalfOpenState(2)
                 .slidingWindowSize(2)
                 .recordExceptions(IOException.class,
-                    TimeoutException.class, RuntimeException.class)
+                    TimeoutException.class,
+                    RuntimeException.class)
                 .build();
         CircuitBreakerRegistry circuitBreakerRegistry =
             CircuitBreakerRegistry.of(circuitBreakerConfig);
@@ -97,6 +98,6 @@ public class CircuitBreakerTest {
     }
 
     private void invoke(String tag, Supplier<String> stringSupplier) {
-        Try.ofSupplier(stringSupplier).onFailure(x -> System.out.format("Step %s failed: %s\n", tag, x.getMessage())); //Hello
+        Try.ofSupplier(stringSupplier).onFailure(throwable -> System.out.format("Step %s failed: %s\n", tag, throwable)); //Hello
     }
 }

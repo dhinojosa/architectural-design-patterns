@@ -57,7 +57,7 @@ public class BulkheadTest {
                 .custom()
                 .maxThreadPoolSize(10)
                 .coreThreadPoolSize(2)
-                .queueCapacity(20)
+                .queueCapacity(20)  //you may want to increase
                 .keepAliveDuration(Duration.of(10, ChronoUnit.MILLIS))
                 .build();
 
@@ -65,7 +65,7 @@ public class BulkheadTest {
             ThreadPoolBulkheadRegistry.of(config);
         ThreadPoolBulkhead bulkhead = registry.bulkhead("service-a");
 
-        IntStream.range(1, 10)
+        IntStream.range(1, 10)//recommend a change, increase the number what happens?
                  .boxed()
                  .map(i -> ThreadPoolBulkhead.decorateSupplier(bulkhead,
                      () -> sleepFor(5000).andReturn(String.format("done-%d", i))))
