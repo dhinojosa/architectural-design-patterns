@@ -190,6 +190,7 @@ services:
         platform: linux/amd64
         depends_on:
             - broker
+            - schema-registry
         hostname: my-producer
         container_name: my-producer
         environment:
@@ -201,6 +202,7 @@ services:
         platform: linux/amd64
         depends_on:
             - broker
+            - schema-registry
         hostname: my-consumer-1
         container_name: my-consumer-1
         environment:
@@ -213,6 +215,7 @@ services:
         platform: linux/amd64
         depends_on:
             - broker
+            - schema-registry
         hostname: my-consumer-2
         container_name: my-consumer-2
         environment:
@@ -225,6 +228,7 @@ services:
         platform: linux/amd64
         depends_on:
             - broker
+            - schema-registry
         hostname: my-consumer-3
         container_name: my-consumer-3
         environment:
