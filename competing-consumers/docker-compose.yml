@@ -228,5 +228,16 @@ services:
             BOOTSTRAP_SERVERS: "broker:29092"
             GROUP_ID: "my-group"
 
+    my-consumer-4:
+        image: dhinojosa/my-consumer
+        platform: linux/amd64
+        depends_on:
+            - broker
+        hostname: my-consumer-4
+        container_name: my-consumer-4
+        environment:
+            BOOTSTRAP_SERVERS: "broker:29092"
+            GROUP_ID: "my-group"
+
 
 
