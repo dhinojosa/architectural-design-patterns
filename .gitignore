@@ -1,3 +1,4 @@
 .idea/
 target/
-.jqwik-database/
+.jqwik-database
+.idea/
