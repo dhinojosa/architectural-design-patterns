@@ -194,6 +194,7 @@ services:
         container_name: my-producer
         environment:
             BOOTSTRAP_SERVERS: "broker:29092"
+            SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
 
     my-avro-consumer-1:
         image: dhinojosa/my-avro-consumer
@@ -204,7 +205,8 @@ services:
         container_name: my-consumer-1
         environment:
             BOOTSTRAP_SERVERS: "broker:29092"
-            GROUP_ID: "my-group"
+            SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+            GROUP_ID: "my-avro-group"
 
     my-avro-consumer-2:
         image: dhinojosa/my-avro-consumer
@@ -215,7 +217,8 @@ services:
         container_name: my-consumer-2
         environment:
             BOOTSTRAP_SERVERS: "broker:29092"
-            GROUP_ID: "my-group"
+            SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+            GROUP_ID: "my-avro-group"
 
     my-avro-consumer-3:
         image: dhinojosa/my-avro-consumer
@@ -226,7 +229,8 @@ services:
         container_name: my-consumer-3
         environment:
             BOOTSTRAP_SERVERS: "broker:29092"
-            GROUP_ID: "my-group"
+            SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+            GROUP_ID: "my-avro-group"
 
 
 
