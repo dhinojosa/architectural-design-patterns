@@ -3,3 +3,4 @@ target/
 .jqwik-database
 **/*.swp
 **/*.swo
+lab_book.html
