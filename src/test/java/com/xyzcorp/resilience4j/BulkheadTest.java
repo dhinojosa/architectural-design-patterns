@@ -14,7 +14,6 @@ import java.util.stream.IntStream;
 
 public class BulkheadTest {
 
-
     public Returnable sleepFor(long millis) {
         try {
             Thread.sleep(millis);
