@@ -4,5 +4,9 @@
 
 tasks:
   - init: mvn install -DskipTests=true
+vscode:
+  extensions:
+    - redhat.java
+    - vscjava.vscode-java-test
 
 
