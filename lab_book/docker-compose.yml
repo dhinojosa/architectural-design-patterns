@@ -1,0 +1,9 @@
+---
+version: '3'
+services:
+    web:
+        image: nginx
+        ports:
+            - 8099:80
+        volumes:
+            - .:/usr/share/nginx/html
