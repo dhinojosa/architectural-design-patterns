@@ -673,31 +673,19 @@ pre.pygments .tok-il { color: #40a070 } /* Literal.Number.Integer.Long */
 <div class="sect1">
 <h2 id="_lab_5_competing_consumers">Lab 5: Competing Consumers</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This will not work on Apple Silicon M1, unfortunately because the amd64 will not run. While docker can emulate for the most, it will not in this case.
-</td>
-</tr>
-</table>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Open a terminal and navigate to your <em>architectural-design-patterns</em> project and into the <em>competing-consumers</em> folder</p>
+<p>Open the <em>competing-consumers</em> folder</p>
 </li>
 <li>
-<p>Run the command <code>docker-compose up -d broker zookeeper control-center</code></p>
+<p>Right-click on the <em>docker-compose.yml</em> file and select "Compose Up - Select Services", deselect all the checkmarks, and select <code>control-center</code></p>
 </li>
 <li>
 <p>Wait until all the components are loaded that you can monitor with <code>docker ps</code></p>
 </li>
 <li>
-<p>In your browser of choice, open <code><a href="http://localhost:9021" class="bare">http://localhost:9021</a></code> and click on the broker labeled <em>controlcenter-cluster</em></p>
+<p>In your browser of choice, open port <code>9021</code> in your gitpod ports menu</p>
 <div class="imageblock">
 <div class="content">
 <img src="./images/control-center.png" alt="control center">
@@ -722,13 +710,16 @@ This will not work on Apple Silicon M1, unfortunately because the amd64 will not
 </div>
 </li>
 <li>
-<p>Go back to your terminal and run <code>docker-compose up -d my-producer my-consumer-1 my-consumer-2 my-consumer-3</code></p>
+<p>Go back to the <em>competing-consumers</em> folder</p>
 </li>
 <li>
-<p>View the logs of the running consumers, for example, to view my-consumer-3 we can use <code>docker logs my-consumer-3</code> or <code>docker logs my-consumer-3 -f</code> and view the distribution of orders</p>
+<p>Right-click on the <em>docker-compose.yml</em> file and select "Compose Up - Select Services", deselect all the checkmarks, and just select <code>my-producer</code>, <code>my-consumer-1</code>, <code>my-consumer-2</code>, <code>my-consumer-3</code></p>
 </li>
 <li>
-<p>Knock one of the consumers off using <code>docker-compose stop my-consumer-3</code> and view the logs of both <code>my-consumer-2</code> and <code>my-consumer-1</code></p>
+<p>View the logs of the running consumers by right clicking on the container in the Docker menu and selecting "View Logs"</p>
+</li>
+<li>
+<p>Knock one of the consumers off by right clicking one of the consumer containers, like <code>my-consumer-3</code> and select and view the logs of both <code>my-consumer-2</code> and <code>my-consumer-1</code></p>
 </li>
 <li>
 <p>What do the logs say?</p>
@@ -746,7 +737,7 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 </div>
 </li>
 <li>
-<p>Run <code>docker-compose down</code> in the <em>competing-consumers</em> folder</p>
+<p>Run <code>docker-compose down</code> in the <em>competing-consumers</em> folder, by selecting the <em>docker_compose.yml</em> file, right clicking, and selecting "Compose Down"</p>
 </li>
 </ol>
 </div>
@@ -760,31 +751,19 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <div class="sect1">
 <h2 id="_lab_6_claim_check">Lab 6: Claim Check</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This will not work on Apple Silicon M1, unfortunately because the amd64 will not run. While docker can emulate for the most, it will not in this case.
-</td>
-</tr>
-</table>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Open a terminal and navigate to your <em>architectural-design-patterns</em> project and into the <em>claim_cqrs</em> folder</p>
+<p>Navigate to your <em>architectural-design-patterns</em> project and into the <em>claim_cqrs</em> folder</p>
 </li>
 <li>
-<p>Run the command <code>docker-compose up -d broker zookeeper control-center</code></p>
+<p>Right click on the <em>docker-compose.yml</em> file and select "Compose Up - Select Services", deselect all the checkmarks, and select <code>control-center</code></p>
 </li>
 <li>
-<p>Wait until all the components are loaded that you can monitor with <code>docker ps</code></p>
+<p>Wait until all the components are loaded</p>
 </li>
 <li>
-<p>In your browser of choice, open <code><a href="http://localhost:9021" class="bare">http://localhost:9021</a></code> and click on the broker labeled <em>controlcenter-cluster</em></p>
+<p>In your browser of choice, open port <code>9021</code> in your gitpod ports menu</p>
 <div class="imageblock">
 <div class="content">
 <img src="./images/control-center.png" alt="control center">
@@ -809,16 +788,19 @@ This will not work on Apple Silicon M1, unfortunately because the amd64 will not
 </div>
 </li>
 <li>
-<p>Go back to your terminal and run <code>docker-compose up -d my-avro-producer my-avro-consumer-1 my-avro-consumer-2 my-avro-consumer-3</code></p>
+<p>Navigate to your <em>architectural-design-patterns</em> project and into the <em>claim_cqrs</em> folder</p>
 </li>
 <li>
-<p>Visit <code><a href="http://localhost:8081/subjects" class="bare">http://localhost:8081/subjects</a></code> and what do you see? Note one of the subjects, <code>my-avro-orders-value</code></p>
+<p>Right click on the <em>docker-compose.yml</em> file and select "Compose Up - Select Services", deselect all the checkmarks, and select <code>my-avro-producer</code>, <code>my-avro-consumer-1</code>, <code>my-avro-consumer-2</code>, <code>my-avro-consumer-3</code></p>
 </li>
 <li>
-<p>Visit <code><a href="http://localhost:8081/subjects/my-avro-orders-value/versions" class="bare">http://localhost:8081/subjects/my-avro-orders-value/versions</a></code> and what do you see? Note the version number</p>
+<p>Open port 8081, from the ports menu, Visit <code><a href="http://&lt;url&gt;:8081/subjects" class="bare">http://&lt;url&gt;:8081/subjects</a></code> and what do you see? Note one of the subjects, <code>my-avro-orders-value</code></p>
 </li>
 <li>
-<p>Visit <code><a href="http://localhost:8081/subjects/my-avro-orders-value/versions/{versionId}" class="bare">http://localhost:8081/subjects/my-avro-orders-value/versions/{versionId}</a></code> where you will replace <code>{version}</code> with the version you noted in the previous step. What do you see?</p>
+<p>Visit <code><a href="http://&lt;url&gt;:8081/subjects/my-avro-orders-value/versions" class="bare">http://&lt;url&gt;:8081/subjects/my-avro-orders-value/versions</a></code> and what do you see? Note the version number</p>
+</li>
+<li>
+<p>Visit <code><a href="http://&lt;url&gt;:8081/subjects/my-avro-orders-value/versions/{versionId}" class="bare">http://&lt;url&gt;:8081/subjects/my-avro-orders-value/versions/{versionId}</a></code> where you will replace <code>{version}</code> with the version you noted in the previous step. What do you see?</p>
 </li>
 <li>
 <p>The idea here is that there a schema involved and you are looking at the storage, the claim check is the <code>id</code> you see in this payload. This schema is not sent with the message</p>
@@ -841,21 +823,26 @@ This will not work on Apple Silicon M1, unfortunately because the amd64 will not
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>In your browser of choice, open <code><a href="http://localhost:9021" class="bare">http://localhost:9021</a></code> and click on the broker labeled <em>controlcenter-cluster</em></p>
+<p>In the Docker menu, and in containers locate the broker container, typically listed under the term <em>cp-ksqldb-server</em></p>
+</li>
+<li>
+<p>Right click on the container, and select "Attach Shell"</p>
 <div class="imageblock">
 <div class="content">
-<img src="./images/control-center.png" alt="control center">
+<img src="./images/AttachShellKSQLDB.png" alt="AttachShellKSQLDB" width="30%" height="30%">
 </div>
 </div>
 </li>
 <li>
-<p>Select on the left hand menu <em>ksqlDB</em></p>
+<p>In your shell, login using <code>ksql <a href="http://localhost:8088" class="bare">http://localhost:8088</a></code>, it should look something like the following:</p>
+<div class="imageblock">
+<div class="content">
+<img src="./images/KSQLDBIntro.png" alt="KSQLDBIntro">
+</div>
+</div>
 </li>
 <li>
-<p>Select <code>ksqldb1</code> instance</p>
-</li>
-<li>
-<p>In the <em>Editor</em>, enter the following:</p>
+<p>Enter the following commands</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="ksql"><span></span>CREATE STREAM my_avro_orders \
@@ -865,7 +852,7 @@ gender VARCHAR) WITH (kafka_topic=&#39;my-avro-orders&#39;, value_format=&#39;AV
 </div>
 </li>
 <li>
-<p>Select <code>auto.offset.reset</code> to <code>earliest</code></p>
+<p>Select <code>auto.offset.reset</code> to <code>earliest</code> by calling: <code>SET 'auto.offset.reset' = 'earliest';</code></p>
 </li>
 <li>
 <p>In your editor, enter the following to create non-persistent query using <code>SELECT * from my_avro_orders emit changes;</code> and review the results</p>
@@ -883,7 +870,7 @@ gender VARCHAR) WITH (kafka_topic=&#39;my-avro-orders&#39;, value_format=&#39;AV
 <p>Click on <em>Topics</em> on the left hand menu, notice the new topic <em>MY_AVRO_STATE_COUNT</em>, view the messages, this is a materialized view that we can port over to a database.</p>
 </li>
 <li>
-<p>When done, in the terminal, type <code>docker compose down</code></p>
+<p>When done, navigate to your <em>architectural-design-patterns</em> project and into the <em>claim_cqrs</em> folder, right click on <em>docker-compose.yml</em> and select "Compose Down"</p>
 </li>
 </ol>
 </div>
@@ -897,7 +884,7 @@ gender VARCHAR) WITH (kafka_topic=&#39;my-avro-orders&#39;, value_format=&#39;AV
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-19 10:49:52 -0600
+Last updated 2023-07-18 07:46:47 -0600
 </div>
 </div>
 </body>
