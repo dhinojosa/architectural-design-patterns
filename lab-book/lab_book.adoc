@@ -78,9 +78,13 @@ image::stop.png[width="20%", height="20%", align="center"]
 == Lab 4: Bulkhead
 
 . In the _resilience4j_ module, in the _src/test/java_ directory, and in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _BulkheadTest.java_
-. Run the `testSemaphoneBulkhead` test and notice how it handles saturation
+. Run the `testSemaphoreBulkhead` test and notice how it handles saturation. In Gitpod do the following, so you can see the output:
+.. `cd resilience4j`
+.. `mvn test -Dtest=BulkheadTest#testSemaphoreBulkhead`
 . Try to change different settings in the `Bulkhead` and review the metrics
-. Run the `testThreadPoolBulkhead` test and notice how it handles saturation
+. Run the `testThreadPoolBulkhead` test and notice how it handles saturation. In Gitpod do the following, so you can see the output:
+.. `cd resilience4j`
+.. `mvn test -Dtest=BulkheadTest#testThreadPoolBulkhead`
 . Try to change different settings in the `ThreadPoolBulkhead` and review the metrics
 
 image::stop.png[width="20%", height="20%", align="center"]

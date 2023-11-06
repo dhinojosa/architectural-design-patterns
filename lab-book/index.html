@@ -663,13 +663,33 @@ pre.pygments .tok-il { color: #40a070 } /* Literal.Number.Integer.Long */
 <p>In the <em>resilience4j</em> module, in the <em>src/test/java</em> directory, and in the <em>src/test/java</em> directory, and in the <code>com.evolutionnext.resilience4j</code> package, open <em>BulkheadTest.java</em></p>
 </li>
 <li>
-<p>Run the <code>testSemaphoneBulkhead</code> test and notice how it handles saturation</p>
+<p>Run the <code>testSemaphoreBulkhead</code> test and notice how it handles saturation. In Gitpod do the following, so you can see the output:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>cd resilience4j</code></p>
+</li>
+<li>
+<p><code>mvn test -Dtest=BulkheadTest#testSemaphoreBulkhead</code></p>
+</li>
+</ol>
+</div>
 </li>
 <li>
 <p>Try to change different settings in the <code>Bulkhead</code> and review the metrics</p>
 </li>
 <li>
-<p>Run the <code>testThreadPoolBulkhead</code> test and notice how it handles saturation</p>
+<p>Run the <code>testThreadPoolBulkhead</code> test and notice how it handles saturation. In Gitpod do the following, so you can see the output:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>cd resilience4j</code></p>
+</li>
+<li>
+<p><code>mvn test -Dtest=BulkheadTest#testThreadPoolBulkhead</code></p>
+</li>
+</ol>
+</div>
 </li>
 <li>
 <p>Try to change different settings in the <code>ThreadPoolBulkhead</code> and review the metrics</p>
@@ -1045,7 +1065,7 @@ VALUE_FORMAT = &#39;AVRO&#39;
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-11-06 13:41:11 UTC
+Last updated 2023-11-06 13:52:13 UTC
 </div>
 </div>
 </body>
