@@ -1,0 +1,64 @@
+[
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "StockReserved",
+        "fields": [
+            {
+                "name": "timestamp",
+                "type": {
+                    "type": "long",
+                    "logicalType": "timestamp-millis"
+                }
+            },
+            {
+                "name": "orderId",
+                "type": "int"
+            },
+            {
+                "name": "points",
+                "type": "int"
+            }
+        ]
+    },
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "StockReshelved",
+        "fields": [
+            {
+                "name": "timestamp",
+                "type": {
+                    "type": "long",
+                    "logicalType": "timestamp-millis"
+                }
+            },
+            {
+                "name": "orderId",
+                "type": "int"
+            },
+            {
+                "name": "points",
+                "type": "int"
+            }
+        ]
+    },
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "StockEvent",
+        "fields": [
+            {
+                "name": "action",
+                "type": [
+                    "com.evolutionnext.choreography.StockReserved",
+                    "com.evolutionnext.choreography.StockReshelved"
+                ]
+            },
+            {
+                "name": "id",
+                "type": "int"
+            }
+        ]
+    }
+]

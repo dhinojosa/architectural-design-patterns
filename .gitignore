@@ -1,6 +1,7 @@
-.idea/
+**/.idea
 target/
 .jqwik-database
 **/*.swp
 **/*.swo
+**/*.iml
 lab_book.html

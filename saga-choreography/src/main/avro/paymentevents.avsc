@@ -1,0 +1,64 @@
+[
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "PaymentTaken",
+        "fields": [
+            {
+                "name": "timestamp",
+                "type": {
+                    "type": "long",
+                    "logicalType": "timestamp-millis"
+                }
+            },
+            {
+                "name": "id",
+                "type": "int"
+            },
+            {
+                "name": "orderId",
+                "type": "int"
+            }
+        ]
+    },
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "PaymentDeclined",
+        "fields": [
+            {
+                "name": "timestamp",
+                "type": {
+                    "type": "long",
+                    "logicalType": "timestamp-millis"
+                }
+            },
+            {
+                "name": "id",
+                "type": "int"
+            },
+            {
+                "name": "orderId",
+                "type": "int"
+            }
+        ]
+    },
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "PaymentEvent",
+        "fields": [
+            {
+                "name": "action",
+                "type": [
+                    "com.evolutionnext.choreography.PaymentTaken",
+                    "com.evolutionnext.choreography.PaymentDeclined"
+                ]
+            },
+            {
+                "name": "id",
+                "type": "int"
+            }
+        ]
+    }
+]

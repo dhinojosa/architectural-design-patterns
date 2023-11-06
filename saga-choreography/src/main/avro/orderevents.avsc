@@ -1,0 +1,64 @@
+[
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "OrderPlaced",
+        "fields": [
+            {
+                "name": "amount",
+                "type": "double"
+            },
+            {
+                "name": "timestamp",
+                "type": {
+                    "type": "long",
+                    "logicalType": "timestamp-millis"
+                }
+            }
+        ]
+    },
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "OrderShipped",
+        "fields": [
+            {
+                "name": "shippingType",
+                "type": {
+                    "type": "enum",
+                    "name": "ShippingType",
+                    "symbols": [
+                        "NEXT_DAY",
+                        "TWO_DAY",
+                        "GROUND"
+                    ]
+                }
+            },
+            {
+                "name": "timestamp",
+                "type": {
+                    "type": "long",
+                    "logicalType": "timestamp-millis"
+                }
+            }
+        ]
+    },
+    {
+        "type": "record",
+        "namespace": "com.evolutionnext.choreography",
+        "name": "OrderEvent",
+        "fields": [
+            {
+                "name": "action",
+                "type": [
+                    "com.evolutionnext.choreography.OrderPlaced",
+                    "com.evolutionnext.choreography.OrderShipped"
+                ]
+            },
+            {
+                "name": "id",
+                "type": "int"
+            }
+        ]
+    }
+]
