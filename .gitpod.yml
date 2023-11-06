@@ -3,10 +3,11 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - init: mvn install -DskipTests=true
+  - init: mvn clean install -DskipTests=true
 vscode:
   extensions:
     - redhat.java
     - vscjava.vscode-java-test
+    - ms-azuretools.vscode-docker
 
 
