@@ -135,9 +135,9 @@ image::create-myavro-topic.png[]
 +
 . Navigate to your _architectural-design-patterns_ project and into the _claim-check_ module once again.
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `my-avro-producer`, `my-avro-consumer-1`, `my-avro-consumer-2`, `my-avro-consumer-3`
-. Open port 8081, from the ports menu, Visit `http://<url>:8081/subjects` and what do you see? Note one of the subjects, `my-avro-orders-value`
-. Visit `http://<url>:8081/subjects/my-avro-orders-value/versions` and what do you see? Note the version number
-. Visit `http://<url>:8081/subjects/my-avro-orders-value/versions/{versionId}` where you will replace `{versionId}` with the version you noted in the previous step. What do you see?
+. Open port 8081, from the ports menu in Gitpod. Visit `http://<gitpod-url>/subjects` and what do you see? Note one of the subjects, `my-avro-orders-value`
+. Visit `http://<gitpod-url>/subjects/my-avro-orders-value/versions` and what do you see? Note the version number
+. Visit `http://<gitpod-url>/subjects/my-avro-orders-value/versions/{versionId}` where you will replace `{versionId}` with the version you noted in the previous step. What do you see?
 . The idea here is that there a schema involved, and you are looking at the storage, the claim check is the `id` you see in this payload. This schema is not sent with the message
 . Run `docker-compose down` in the _claim-check_ module folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
@@ -148,12 +148,34 @@ image::stop.png[width="20%", height="20%", align="center"]
 . Open the _cqrs_ module folder
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `connect ksqldb-cli postgres control-center`
 . Login into `connect` container by using either `Attach Shell` on Gitpod or `docker exec -it connect /bin/bash`
+
+. Run the following in the container a JDBC Connect that reads from postgres - `confluent-hub install confluentinc/kafka-connect-jdbc:10.7.1`
+. Select `2. / (where this tool is installed)`
+. Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
+. Answer `y` to `I agree to the software license agreement (yN)`
+. Answer `y` to `Do you want to continue?`
+. Answer `y` to `Do you want to update all detected configs? (yN)`
 . Run the following in the container `confluent-hub install mongodb/kafka-connect-mongodb:1.10.0`, or whatever the latest version is from https://confluent.io/hub[Confluent Hub]
 . Select `2. / (where this tool is installed)`
 . Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
 . Answer `y` to `I agree to the software license agreement (yN)`
 . Answer `y` to `Do you want to continue?`
 . Answer `y` to `Do you want to update all detected configs? (yN)`
+. Exit the container using `exit`
+. Restart the container in GitPod or using `docker restart connect`
+
+. Run the `CreateStocks` application by doing the following:
+.. Create a new terminal
+.. `cd cqrs`
+.. Run `mvn clean compile exec:java -Dexec.mainClass=com.xyzcorp.outbox.CreateStocks` to generate data.
+
+. Login into your `postgres` container using `Attach Shell` or `docker exec -it postgres /bin/bash`
+. Run the following: `export PGPASSWORD='docker'`
+. Run the following: `psql -d docker -U docker`
+. In the Postgres shell run  `\dt` which will show all the tables
+. In the Postgres shell run `\d stock_trade`, which will show specific table schema
+. Run `SELECT * from stock_trade;` and ensure that the data exists
+
 . Go to KsqlDB to create Stream
 +
 [source,ksql]

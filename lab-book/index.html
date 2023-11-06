@@ -827,13 +827,13 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <p>Right-click on the <em>docker-compose.yml</em> file and select "Compose Up - Select Services", deselect all the checkmarks, and select <code>my-avro-producer</code>, <code>my-avro-consumer-1</code>, <code>my-avro-consumer-2</code>, <code>my-avro-consumer-3</code></p>
 </li>
 <li>
-<p>Open port 8081, from the ports menu, Visit <code><a href="http://&lt;url&gt;:8081/subjects" class="bare">http://&lt;url&gt;:8081/subjects</a></code> and what do you see? Note one of the subjects, <code>my-avro-orders-value</code></p>
+<p>Open port 8081, from the ports menu in Gitpod. Visit <code><a href="http://&lt;gitpod-url&gt;/subjects" class="bare">http://&lt;gitpod-url&gt;/subjects</a></code> and what do you see? Note one of the subjects, <code>my-avro-orders-value</code></p>
 </li>
 <li>
-<p>Visit <code><a href="http://&lt;url&gt;:8081/subjects/my-avro-orders-value/versions" class="bare">http://&lt;url&gt;:8081/subjects/my-avro-orders-value/versions</a></code> and what do you see? Note the version number</p>
+<p>Visit <code><a href="http://&lt;gitpod-url&gt;/subjects/my-avro-orders-value/versions" class="bare">http://&lt;gitpod-url&gt;/subjects/my-avro-orders-value/versions</a></code> and what do you see? Note the version number</p>
 </li>
 <li>
-<p>Visit <code><a href="http://&lt;url&gt;:8081/subjects/my-avro-orders-value/versions/{versionId}" class="bare">http://&lt;url&gt;:8081/subjects/my-avro-orders-value/versions/{versionId}</a></code> where you will replace <code>{versionId}</code> with the version you noted in the previous step. What do you see?</p>
+<p>Visit <code><a href="http://&lt;gitpod-url&gt;/subjects/my-avro-orders-value/versions/{versionId}" class="bare">http://&lt;gitpod-url&gt;/subjects/my-avro-orders-value/versions/{versionId}</a></code> where you will replace <code>{versionId}</code> with the version you noted in the previous step. What do you see?</p>
 </li>
 <li>
 <p>The idea here is that there a schema involved, and you are looking at the storage, the claim check is the <code>id</code> you see in this payload. This schema is not sent with the message</p>
@@ -865,6 +865,24 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <p>Login into <code>connect</code> container by using either <code>Attach Shell</code> on Gitpod or <code>docker exec -it connect /bin/bash</code></p>
 </li>
 <li>
+<p>Run the following in the container a JDBC Connect that reads from postgres - <code>confluent-hub install confluentinc/kafka-connect-jdbc:10.7.1</code></p>
+</li>
+<li>
+<p>Select <code>2. / (where this tool is installed)</code></p>
+</li>
+<li>
+<p>Answer <code>y</code> to <code>Do you want to install this into /usr/share/confluent-hub-components?</code></p>
+</li>
+<li>
+<p>Answer <code>y</code> to <code>I agree to the software license agreement (yN)</code></p>
+</li>
+<li>
+<p>Answer <code>y</code> to <code>Do you want to continue?</code></p>
+</li>
+<li>
+<p>Answer <code>y</code> to <code>Do you want to update all detected configs? (yN)</code></p>
+</li>
+<li>
 <p>Run the following in the container <code>confluent-hub install mongodb/kafka-connect-mongodb:1.10.0</code>, or whatever the latest version is from <a href="https://confluent.io/hub">Confluent Hub</a></p>
 </li>
 <li>
@@ -881,6 +899,46 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 </li>
 <li>
 <p>Answer <code>y</code> to <code>Do you want to update all detected configs? (yN)</code></p>
+</li>
+<li>
+<p>Exit the container using <code>exit</code></p>
+</li>
+<li>
+<p>Restart the container in GitPod or using <code>docker restart connect</code></p>
+</li>
+<li>
+<p>Run the <code>CreateStocks</code> application by doing the following:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a new terminal</p>
+</li>
+<li>
+<p><code>cd cqrs</code></p>
+</li>
+<li>
+<p>Run <code>mvn clean compile exec:java -Dexec.mainClass=com.xyzcorp.outbox.CreateStocks</code> to generate data.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Login into your <code>postgres</code> container using <code>Attach Shell</code> or <code>docker exec -it postgres /bin/bash</code></p>
+</li>
+<li>
+<p>Run the following: <code>export PGPASSWORD='docker'</code></p>
+</li>
+<li>
+<p>Run the following: <code>psql -d docker -U docker</code></p>
+</li>
+<li>
+<p>In the Postgres shell run  <code>\dt</code> which will show all the tables</p>
+</li>
+<li>
+<p>In the Postgres shell run <code>\d stock_trade</code>, which will show specific table schema</p>
+</li>
+<li>
+<p>Run <code>SELECT * from stock_trade;</code> and ensure that the data exists</p>
 </li>
 <li>
 <p>Go to KsqlDB to create Stream</p>
@@ -1065,7 +1123,7 @@ VALUE_FORMAT = &#39;AVRO&#39;
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-11-06 13:52:13 UTC
+Last updated 2023-11-06 14:24:59 UTC
 </div>
 </div>
 </body>
