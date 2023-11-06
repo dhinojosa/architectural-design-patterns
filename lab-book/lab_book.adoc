@@ -56,7 +56,9 @@ image::stop.png[width="20%", height="20%", align="center"]
 == Lab 2: Circuit Breaker
 
 . In the _resilience4j_ module, in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _CircuitBreakTest.java_
-. Run the `TestCircuitBreaker` test and notice how it handles failure
+. Run the `TestCircuitBreaker` test and notice how it handles failure. In Gitpod do the following, so you can see the output:
+.. `cd resilience4j`
+.. `mvn test -Dtest=CircuitBreakerTest#testCircuitBreaker`
 . Change order with the server of the output
 . Try to change different settings in the `CircuitBreaker` and review the metrics
 
@@ -65,7 +67,9 @@ image::stop.png[width="20%", height="20%", align="center"]
 == Lab 3: Retry
 
 . In the _resilience4j_ module, in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _RetryTest.java_
-. Run the `testRetry` test and notice how it handles failure
+. Run the `testRetry` test and notice how it handles failure. In Gitpod do the following, so you can see the output:
+.. `cd resilience4j`
+.. `mvn test -Dtest=RetryTest#testRetry`
 . Change order with the server of the output
 . Try to change different settings in the `Retry` and review the metrics
 
