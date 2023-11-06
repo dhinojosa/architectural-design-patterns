@@ -149,7 +149,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 === Launch Initial Containers
 
 . Open the _cqrs_ module folder
-. Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `connect ksqldb-cli postgres control-center`
+. Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `connect ksqldb-cli postgres control-center mongo mongo-express`
 . Login into `connect` container by using either `Attach Shell` on Gitpod or `docker exec -it connect /bin/bash`
 
 === Create a JDBC Connector
@@ -202,7 +202,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 .. *Value Converter Class* - `io.confluent.connect.avro.AvroConverter`
 .. *JDBC URL* - `jdbc:postgresql://postgres:5432/`
 .. *JDBC User* - `docker`
-.. *JDBC Pass* - `docker`
+.. *JDBC Password* - `docker`
 .. *Database Dialect* `PostgreSqlDatabaseDialect`
 .. *Table Loading Mode* `incrementing`
 .. *Topic Prefix* - `postgres_`
@@ -248,14 +248,14 @@ SET 'auto.offset.reset'='earliest';
 +
 [source,ksql]
 ----
-select * from STOCK_TRADES;
+select * from STOCK_TRADES emit changes;
 ----
 +
 . Let's try something fancy, let's get a count of all the stocks and their count
 +
 [source,ksql]
 ----
-select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes;
+select STOCK_SYMBOL, AS_VALUE(STOCK_SYMBOL) as symbol, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;
 ----
 +
 . Create an aggregate topic from the above statement
@@ -264,17 +264,20 @@ select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL em
 ----
 create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, AS_VALUE(STOCK_SYMBOL) as symbol, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;
 ----
+. Go to the topics, and select _STOCK_COUNT_
+. Select the _Messages_ menu
+. View the data coming for data loading
 
 === Create a MongoDB Sink
 
-. Setup MongoDB sink (read data from Aggregate Topic and push data to MongoDB)
 . Go back to the _Confluent Control Center_
-. Click on the menu:Connect menu
+. Click on the menu:Connect[] menu
+. Select the _connect_default_ cluster
 . Click on the btn:[Upload connector config file] button
 . Select the file from the _cqrs_ module _src/main./resources/mongosink.json_
 . Click btn:[Next]
 . Verify the JSON output, then select btn:[Launch]
-. Open the browser to the `mongo-express` container using the admin username `admin` and password `pass`
+. Open the browser to the `mongo-express` container, port `10002` using the admin username `admin` and password `pass`
 . Locate the database _STOCK_COUNT_
 . Locate the collection _stock_counts_
 . Click btn:[View]

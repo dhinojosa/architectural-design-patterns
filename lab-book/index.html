@@ -872,7 +872,7 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <p>Open the <em>cqrs</em> module folder</p>
 </li>
 <li>
-<p>Right-click on the <em>docker-compose.yml</em> file and select "Compose Up - Select Services", deselect all the checkmarks, and select <code>connect ksqldb-cli postgres control-center</code></p>
+<p>Right-click on the <em>docker-compose.yml</em> file and select "Compose Up - Select Services", deselect all the checkmarks, and select <code>connect ksqldb-cli postgres control-center mongo mongo-express</code></p>
 </li>
 <li>
 <p>Login into <code>connect</code> container by using either <code>Attach Shell</code> on Gitpod or <code>docker exec -it connect /bin/bash</code></p>
@@ -1026,7 +1026,7 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <p><strong>JDBC User</strong> - <code>docker</code></p>
 </li>
 <li>
-<p><strong>JDBC Pass</strong> - <code>docker</code></p>
+<p><strong>JDBC Password</strong> - <code>docker</code></p>
 </li>
 <li>
 <p><strong>Database Dialect</strong> <code>PostgreSqlDatabaseDialect</code></p>
@@ -1108,7 +1108,7 @@ VALUE_FORMAT = &#39;AVRO&#39;
 <p>Show the live data coming from the source</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="ksql"><span></span>select * from STOCK_TRADES;</code></pre>
+<pre class="pygments highlight"><code data-lang="ksql"><span></span>select * from STOCK_TRADES emit changes;</code></pre>
 </div>
 </div>
 </li>
@@ -1116,7 +1116,7 @@ VALUE_FORMAT = &#39;AVRO&#39;
 <p>Let&#8217;s try something fancy, let&#8217;s get a count of all the stocks and their count</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="ksql"><span></span>select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes;</code></pre>
+<pre class="pygments highlight"><code data-lang="ksql"><span></span>select STOCK_SYMBOL, AS_VALUE(STOCK_SYMBOL) as symbol, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;</code></pre>
 </div>
 </div>
 </li>
@@ -1128,6 +1128,15 @@ VALUE_FORMAT = &#39;AVRO&#39;
 </div>
 </div>
 </li>
+<li>
+<p>Go to the topics, and select <em>STOCK_COUNT</em></p>
+</li>
+<li>
+<p>Select the <em>Messages</em> menu</p>
+</li>
+<li>
+<p>View the data coming for data loading</p>
+</li>
 </ol>
 </div>
 </div>
@@ -1136,13 +1145,13 @@ VALUE_FORMAT = &#39;AVRO&#39;
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Setup MongoDB sink (read data from Aggregate Topic and push data to MongoDB)</p>
-</li>
-<li>
 <p>Go back to the <em>Confluent Control Center</em></p>
 </li>
 <li>
-<p>Click on the menu:Connect menu</p>
+<p>Click on the <b class="menuref">Connect</b> menu</p>
+</li>
+<li>
+<p>Select the <em>connect_default</em> cluster</p>
 </li>
 <li>
 <p>Click on the <b class="button">Upload connector config file</b> button</p>
@@ -1157,7 +1166,7 @@ VALUE_FORMAT = &#39;AVRO&#39;
 <p>Verify the JSON output, then select <b class="button">Launch</b></p>
 </li>
 <li>
-<p>Open the browser to the <code>mongo-express</code> container using the admin username <code>admin</code> and password <code>pass</code></p>
+<p>Open the browser to the <code>mongo-express</code> container, port <code>10002</code> using the admin username <code>admin</code> and password <code>pass</code></p>
 </li>
 <li>
 <p>Locate the database <em>STOCK_COUNT</em></p>
@@ -1181,7 +1190,7 @@ VALUE_FORMAT = &#39;AVRO&#39;
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-11-06 14:43:25 UTC
+Last updated 2023-11-06 15:01:00 UTC
 </div>
 </div>
 </body>
