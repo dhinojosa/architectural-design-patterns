@@ -18,7 +18,7 @@ Daniel Hinojosa
 == Lab 1: ArchUnit
 
 . Open the _architectural-design-patterns_ project in your favorite editor or IDE
-. In the _src/test/java_ directory, and in the `com.jitterted.ebp.blackjack` package create a file called _HexArchTest.java_
+. In the _hex-arch_ module, and in the _src/test/java_ directory, and in the `com.jitterted.ebp.blackjack` package create a file called _HexArchTest.java_
 . In the file, copy the following content
 +
 [source, java, subs="attributes,quotes,verbatim"]
@@ -53,10 +53,9 @@ public class HexArchTest {
 
 image::stop.png[width="20%", height="20%", align="center"]
 
-
 == Lab 2: Circuit Breaker
 
-. In the _src/test/java_ directory, and in the `com.xyzcorp.resilience4j` package, open _CircuitBreakTest.java_
+. In the _resilience4j_ module, in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _CircuitBreakTest.java_
 . Run the `TestCircuitBreaker` test and notice how it handles failure
 . Change order with the server of the output
 . Try to change different settings in the `CircuitBreaker` and review the metrics
@@ -65,7 +64,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 
 == Lab 3: Retry
 
-. In the _src/test/java_ directory, and in the `com.xyzcorp.resilience4j` package, open _RetryTest.java_
+. In the _resilience4j_ module, in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _RetryTest.java_
 . Run the `testRetry` test and notice how it handles failure
 . Change order with the server of the output
 . Try to change different settings in the `Retry` and review the metrics
@@ -74,7 +73,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 
 == Lab 4: Bulkhead
 
-. In the _src/test/java_ directory, and in the `com.xyzcorp.resilience4j` package, open _BulkheadTest.java_
+. In the _resilience4j_ module, in the _src/test/java_ directory, and in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _BulkheadTest.java_
 . Run the `testSemaphoneBulkhead` test and notice how it handles saturation
 . Try to change different settings in the `Bulkhead` and review the metrics
 . Run the `testThreadPoolBulkhead` test and notice how it handles saturation
@@ -84,7 +83,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 
 == Lab 5: Competing Consumers
 
-. Open the _competing-consumers_ folder
+. Open the _competing-consumers_ module folder
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `control-center`
 . Wait until all the components are loaded that you can monitor with `docker ps`
 . In your browser of choice, open port `9021` in your gitpod ports menu
@@ -98,22 +97,22 @@ image::control-center.png[]
 +
 image::create-topic.png[]
 +
-. Go back to the _competing-consumers_ folder
+. Go back to the _competing-consumers_ module folder
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and just select `my-producer`, `my-consumer-1`, `my-consumer-2`, `my-consumer-3`
-. View the logs of the running consumers by right clicking on the container in the Docker menu and selecting "View Logs"
-. Knock one of the consumers off by right clicking one of the consumer containers, like `my-consumer-3` and select and view the logs of both `my-consumer-2` and `my-consumer-1`
+. View the logs of the running consumers by right-clicking on the container in the Docker menu and selecting "View Logs"
+. Knock one of the consumers off by right-clicking one of the consumer containers, like `my-consumer-3` and select and view the logs of both `my-consumer-2` and `my-consumer-1`
 . What do the logs say?
 +
 NOTE: In the logs, look for `Partitions Revoked` and `Partitions Assigned`. What you are looking for is a consumer picking up the slack of another consumer.
 +
-. Run `docker-compose down` in the _competing-consumers_ folder, by selecting the _docker_compose.yml_ file, right clicking, and selecting "Compose Down"
+. Run `docker-compose down` in the _competing-consumers_ folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
 image::stop.png[width="20%", height="20%", align="center"]
 
 == Lab 6: Claim Check
 
-. Navigate to your _architectural-design-patterns_ project and into the _claim_cqrs_ folder
-. Right click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `control-center`
+. Navigate to your _architectural-design-patterns_ project and into the _claim-check_ module
+. Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `control-center`
 . Wait until all the components are loaded
 . In your browser of choice, open port `9021` in your gitpod ports menu
 +
@@ -126,42 +125,93 @@ image::control-center.png[]
 +
 image::create-myavro-topic.png[]
 +
-. Navigate to your _architectural-design-patterns_ project and into the _claim_cqrs_ folder
-. Right click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `my-avro-producer`, `my-avro-consumer-1`, `my-avro-consumer-2`, `my-avro-consumer-3`
+. Navigate to your _architectural-design-patterns_ project and into the _claim-check_ module once again.
+. Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `my-avro-producer`, `my-avro-consumer-1`, `my-avro-consumer-2`, `my-avro-consumer-3`
 . Open port 8081, from the ports menu, Visit `http://<url>:8081/subjects` and what do you see? Note one of the subjects, `my-avro-orders-value`
 . Visit `http://<url>:8081/subjects/my-avro-orders-value/versions` and what do you see? Note the version number
-. Visit `http://<url>:8081/subjects/my-avro-orders-value/versions/{versionId}` where you will replace `{version}` with the version you noted in the previous step. What do you see?
-. The idea here is that there a schema involved and you are looking at the storage, the claim check is the `id` you see in this payload. This schema is not sent with the message
-. Keep this instances up in docker for the next lab
+. Visit `http://<url>:8081/subjects/my-avro-orders-value/versions/{versionId}` where you will replace `{versionId}` with the version you noted in the previous step. What do you see?
+. The idea here is that there a schema involved, and you are looking at the storage, the claim check is the `id` you see in this payload. This schema is not sent with the message
+. Run `docker-compose down` in the _claim-check_ module folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
 image::stop.png[width="20%", height="20%", align="center"]
 
-== Lab 7: CQRS
+== Lab 7: CQRS (Command Query Responsibility Segregation)
 
-. In the Docker menu, and in containers locate the broker container, typically listed under the term _cp-ksqldb-server_
-. Right click on the container, and select "Attach Shell"
+. Open the _cqrs_ module folder
+. Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `connect ksqldb-cli postgres control-center`
+. Login into `connect` container by using either `Attach Shell` on Gitpod or `docker exec -it connect /bin/bash`
+. Run the following in the container `confluent-hub install mongodb/kafka-connect-mongodb:1.10.0`, or whatever the latest version is from https://confluent.io/hub[Confluent Hub]
+. Select `2. / (where this tool is installed)`
+. Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
+. Answer `y` to `I agree to the software license agreement (yN)`
+. Answer `y` to `Do you want to continue?`
+. Answer `y` to `Do you want to update all detected configs? (yN)`
+. Go to KsqlDB to create Stream
 +
-image::AttachShellKSQLDB.png[width=30%, height=30%]
-+
-. In your shell, login using `ksql http://localhost:8088`, it should look something like the following:
-+
-image::KSQLDBIntro.png[]
-+
-. Enter the following commands
-+
-[source, ksql, subs="attributes,quotes,verbatim"]
+[source,ksql]
 ----
-CREATE STREAM my_avro_orders \
-(total BIGINT, shipping VARCHAR, state VARCHAR, discount DOUBLE, \
-gender VARCHAR) WITH (kafka_topic='my-avro-orders', value_format='AVRO');
+CREATE STREAM stock_trades WITH (
+KAFKA_TOPIC = 'postgres_stock_trade',
+VALUE_FORMAT = 'AVRO'
+);
 ----
 +
-. Select `auto.offset.reset` to `earliest` by calling: `SET 'auto.offset.reset' = 'earliest';`
-. In your editor, enter the following to create non-persistent query using `SELECT * from my_avro_orders emit changes;` and review the results
-. In your editor, enter the following to create another non-persistent query using `SELECT state, shipping from my_avro_orders emit changes;` and review the results
-. In your editor, enter the following to create another non-persistent query using `SELECT state, count(*) as count from my_avro_orders group by state emit changes;` and review the results
-. In your editor, enter the following to create another persistent query using `CREATE TABLE my_avro_state_count AS SELECT state, count(*) as count from my_avro_orders group by state emit changes;`
-. Click on _Topics_ on the left hand menu, notice the new topic _MY_AVRO_STATE_COUNT_, view the messages, this is a materialized view that we can port over to a database.
-. When done, navigate to your _architectural-design-patterns_ project and into the _claim_cqrs_ folder, right click on _docker-compose.yml_ and select "Compose Down"
+. Go to KSQL-CLI Container by either attaching to the shell using `docker exec ksqldb-cli /bin/bash`
+. Run following commands
+.. `ksql http://ksqldb-server:8088`
+.. `show streams;`
+.. `SET 'auto.offset.reset'='earliest';`
+.. `select * from STOCK_TRADES;`
+.. `select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes; 12.6 select stock_symbol,count(*) as count, topk(stock_symbol, 5)  from STOCK_TRADES group by STOCK_SYMBOL emit changes`;
+.. `create an aggregate topic - create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;`
+. Setup MongoDB sink (read data from Aggregate Topic and push data to MongoDB)
+. Configure MongoDB sink using mongosink.json that is in `src\main\resources`
+. Use mongodb-express container to see the results for the database
+. Run the following in the container a MongoDB Connect that reads from postgres and do the rest as per Outbox pattern - `confluent-hub install confluentinc/kafka-connect-jdbc:10.7.1`
+. Select `2. / (where this tool is installed)`
+. Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
+. Answer `y` to `I agree to the software license agreement (yN)`
+. Answer `y` to `Do you want to continue?`
+. Answer `y` to `Do you want to update all detected configs? (yN)`
+. Exit the container using `exit`
+. Restart the container using `docker restart connect`
+. In your application `mvn exec:java -Dexec.mainClass=com.xyzcorp.outbox.CreateStocks` to generate data. You can also run in your IDE
+. Login into your `postgres` container using `docker exec -it postgres /bin/bash`
+. Run the following: `export PGPASSWORD='docker'`
+. Run the following: `psql -d docker -U docker`
+. In the postgres shell run  `\dt` which will show all the tables
+. In the postgres shell run `\d stock_trade`, which will show specific table schema
+. Run `SELECT * from stock_trade;` and ensure that the data exists
+. Setup the JDBC connector (reads data from source table and create Kafka topics)
+. Key Converter Class - `io.confluent.connect.avro.AvroConverter`
+. Value Converter Class - `io.confluent.connect.avro.AvroConverter`
+. Database Connection and JDBC URL `jdbc:postgresql://postgres:5432/`
+. Database JDBC User & Pass use `docker`
+. Database Dialect `PostgressSqlDatabaseDialect`
+. Database Mode `incrementing`
+. Topic Prefix - `postgres`_`
+. Additional Properties `key.converter.schema.registry.url` set to  `http://schema-registry:8081`
+. Additional Properties -> `value.converter.schema.registry.url` set to `http://schema-registry:8081`
+. Go to KsqlDB to create Stream
++
+[source,ksql]
+----
+CREATE STREAM stock_trades WITH (
+KAFKA_TOPIC = 'postgres_stock_trade',
+VALUE_FORMAT = 'AVRO'
+);
+----
++
+. Go to KSQL-CLI Container by either attaching to the shell using `docker exec ksqldb-cli /bin/bash`
+. Run following commands
+.. `ksql http://ksqldb-server:8088`
+.. `show streams;`
+.. `SET 'auto.offset.reset'='earliest';`
+.. `select * from STOCK_TRADES;`
+.. `select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes; 12.6 select stock_symbol,count(*) as count, topk(stock_symbol, 5)  from STOCK_TRADES group by STOCK_SYMBOL emit changes`;
+.. `create an aggregate topic - create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;`
+. Setup MongoDB sink (read data from Aggregate Topic and push data to MongoDB)
+. Configure MongoDB sink using mongosink.json that is in `src\main\resources`
+. Use mongodb-express container to see the results for the database
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width=15%, height=15%, align=center]

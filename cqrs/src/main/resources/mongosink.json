@@ -1,0 +1,13 @@
+{
+    "name": "mongo-tutorial-sink",
+    "config": {
+        "connector.class": "com.mongodb.kafka.connect.MongoSinkConnector",
+        "topics": "STOCK_COUNT",
+        "connection.uri": "mongodb://root:example@mongo",
+        "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter.schemas.enable": false,
+        "database": "STOCK_COUNT",
+        "collection": "stock_counts"
+    }
+}

@@ -15,8 +15,6 @@
         <module>claim-check</module>
         <module>competing-consumers</module>
         <module>cqrs</module>
-        <module>saga-choreography</module>
-        <module>saga-orchestration</module>
         <module>hex-arch</module>
         <module>resilience4j</module>
     </modules>
