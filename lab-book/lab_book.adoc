@@ -145,9 +145,13 @@ image::stop.png[width="20%", height="20%", align="center"]
 
 == Lab 7: CQRS (Command Query Responsibility Segregation)
 
+=== Launch Initial Containers
+
 . Open the _cqrs_ module folder
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `connect ksqldb-cli postgres control-center`
 . Login into `connect` container by using either `Attach Shell` on Gitpod or `docker exec -it connect /bin/bash`
+
+=== Create a JDBC Connector
 
 . Run the following in the container a JDBC Connect that reads from postgres - `confluent-hub install confluentinc/kafka-connect-jdbc:10.7.1`
 . Select `2. / (where this tool is installed)`
@@ -155,6 +159,9 @@ image::stop.png[width="20%", height="20%", align="center"]
 . Answer `y` to `I agree to the software license agreement (yN)`
 . Answer `y` to `Do you want to continue?`
 . Answer `y` to `Do you want to update all detected configs? (yN)`
+
+=== Create a MongoDB Connector
+
 . Run the following in the container `confluent-hub install mongodb/kafka-connect-mongodb:1.10.0`, or whatever the latest version is from https://confluent.io/hub[Confluent Hub]
 . Select `2. / (where this tool is installed)`
 . Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
@@ -164,10 +171,14 @@ image::stop.png[width="20%", height="20%", align="center"]
 . Exit the container using `exit`
 . Restart the container in GitPod or using `docker restart connect`
 
+=== Run the Data Generator
+
 . Run the `CreateStocks` application by doing the following:
 .. Create a new terminal
 .. `cd cqrs`
-.. Run `mvn clean compile exec:java -Dexec.mainClass=com.xyzcorp.outbox.CreateStocks` to generate data.
+.. Run `mvn clean compile exec:java -Dexec.mainClass=com.evolutionnext.cqrs.CreateStocks` to generate data.
+
+=== View the Postgres Database
 
 . Login into your `postgres` container using `Attach Shell` or `docker exec -it postgres /bin/bash`
 . Run the following: `export PGPASSWORD='docker'`
@@ -175,8 +186,47 @@ image::stop.png[width="20%", height="20%", align="center"]
 . In the Postgres shell run  `\dt` which will show all the tables
 . In the Postgres shell run `\d stock_trade`, which will show specific table schema
 . Run `SELECT * from stock_trade;` and ensure that the data exists
+. Exit the `postgres` container by kbd:[CTRL+D] and typing `exit` in the shell
 
-. Go to KsqlDB to create Stream
+=== Create the Postgres Connector
+
+. Log into the Confluent Control Center
+. Select your cluster `controlcenter.cluster`
+. Select _Connect_ in the menu
+. Select the _connect_default_ cluster
+. Select the btn:[Add Connector] button
+. Select the btn:[JdbcSourceConnector] button
+. Add the following in the respective fields:
+.. *Key Converter Class* - `io.confluent.connect.avro.AvroConverter`
+.. *Value Converter Class* - `io.confluent.connect.avro.AvroConverter`
+.. *JDBC URL* - `jdbc:postgresql://postgres:5432/`
+.. *JDBC User* - `docker`
+.. *JDBC Pass* - `docker`
+.. *Database Dialect* `PostgreSqlDatabaseDialect`
+.. *Table Loading Mode* `incrementing`
+.. *Topic Prefix* - `postgres_`
+.. *Additional Properties* -  `key.converter.schema.registry.url` set to  `http://schema-registry:8081`
+.. *Additional Properties* - `value.converter.schema.registry.url` set to `http://schema-registry:8081`
+. Click btn:[Next]
+. Verify the JSON output, then select btn:[Launch]
+. Go back to the home page of the Confluent Control Center
+. Go to the topics, and select _postgres_stock_trade_
+. Select the _Messages_ menu
+. View the data coming for data loading
+. You can stop the database loading by initiating kbd:[CTRL+C]
+
+=== Enrich the Data using KSQLDB
+
+
+. Go to KSQL-CLI Container by either attaching to the `ksqldb-cli` shell using `docker exec ksqldb-cli /bin/bash`
+. Run a ksql terminal that will attach to the KSQLDB Server using the following command
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ ksql http://ksqldb-server:8088
+----
++
+. In the KSQLDB CLI, Create a Stream
 +
 [source,ksql]
 ----
@@ -186,62 +236,46 @@ VALUE_FORMAT = 'AVRO'
 );
 ----
 +
-. Go to KSQL-CLI Container by either attaching to the shell using `docker exec ksqldb-cli /bin/bash`
-. Run following commands
-.. `ksql http://ksqldb-server:8088`
-.. `show streams;`
-.. `SET 'auto.offset.reset'='earliest';`
-.. `select * from STOCK_TRADES;`
-.. `select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes; 12.6 select stock_symbol,count(*) as count, topk(stock_symbol, 5)  from STOCK_TRADES group by STOCK_SYMBOL emit changes`;
-.. `create an aggregate topic - create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;`
-. Setup MongoDB sink (read data from Aggregate Topic and push data to MongoDB)
-. Configure MongoDB sink using mongosink.json that is in `src\main\resources`
-. Use mongodb-express container to see the results for the database
-. Run the following in the container a MongoDB Connect that reads from postgres and do the rest as per Outbox pattern - `confluent-hub install confluentinc/kafka-connect-jdbc:10.7.1`
-. Select `2. / (where this tool is installed)`
-. Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
-. Answer `y` to `I agree to the software license agreement (yN)`
-. Answer `y` to `Do you want to continue?`
-. Answer `y` to `Do you want to update all detected configs? (yN)`
-. Exit the container using `exit`
-. Restart the container using `docker restart connect`
-. In your application `mvn exec:java -Dexec.mainClass=com.xyzcorp.outbox.CreateStocks` to generate data. You can also run in your IDE
-. Login into your `postgres` container using `docker exec -it postgres /bin/bash`
-. Run the following: `export PGPASSWORD='docker'`
-. Run the following: `psql -d docker -U docker`
-. In the postgres shell run  `\dt` which will show all the tables
-. In the postgres shell run `\d stock_trade`, which will show specific table schema
-. Run `SELECT * from stock_trade;` and ensure that the data exists
-. Setup the JDBC connector (reads data from source table and create Kafka topics)
-. Key Converter Class - `io.confluent.connect.avro.AvroConverter`
-. Value Converter Class - `io.confluent.connect.avro.AvroConverter`
-. Database Connection and JDBC URL `jdbc:postgresql://postgres:5432/`
-. Database JDBC User & Pass use `docker`
-. Database Dialect `PostgressSqlDatabaseDialect`
-. Database Mode `incrementing`
-. Topic Prefix - `postgres`_`
-. Additional Properties `key.converter.schema.registry.url` set to  `http://schema-registry:8081`
-. Additional Properties -> `value.converter.schema.registry.url` set to `http://schema-registry:8081`
-. Go to KsqlDB to create Stream
+. Enter into the CLI the following:
 +
 [source,ksql]
 ----
-CREATE STREAM stock_trades WITH (
-KAFKA_TOPIC = 'postgres_stock_trade',
-VALUE_FORMAT = 'AVRO'
-);
+SET 'auto.offset.reset'='earliest';
 ----
 +
-. Go to KSQL-CLI Container by either attaching to the shell using `docker exec ksqldb-cli /bin/bash`
-. Run following commands
-.. `ksql http://ksqldb-server:8088`
-.. `show streams;`
-.. `SET 'auto.offset.reset'='earliest';`
-.. `select * from STOCK_TRADES;`
-.. `select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes; 12.6 select stock_symbol,count(*) as count, topk(stock_symbol, 5)  from STOCK_TRADES group by STOCK_SYMBOL emit changes`;
-.. `create an aggregate topic - create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;`
+. Show the live data coming from the source
++
+[source,ksql]
+----
+select * from STOCK_TRADES;
+----
++
+. Let's try something fancy, let's get a count of all the stocks and their count
++
+[source,ksql]
+----
+select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes;
+----
++
+. Create an aggregate topic from the above statement
++
+[source,ksql]
+----
+create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, AS_VALUE(STOCK_SYMBOL) as symbol, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;
+----
+
+=== Create a MongoDB Sink
+
 . Setup MongoDB sink (read data from Aggregate Topic and push data to MongoDB)
-. Configure MongoDB sink using mongosink.json that is in `src\main\resources`
-. Use mongodb-express container to see the results for the database
+. Go back to the _Confluent Control Center_
+. Click on the menu:Connect menu
+. Click on the btn:[Upload connector config file] button
+. Select the file from the _cqrs_ module _src/main./resources/mongosink.json_
+. Click btn:[Next]
+. Verify the JSON output, then select btn:[Launch]
+. Open the browser to the `mongo-express` container using the admin username `admin` and password `pass`
+. Locate the database _STOCK_COUNT_
+. Locate the collection _stock_counts_
+. Click btn:[View]
 
 image::stop.png[width=15%, height=15%, align=center]

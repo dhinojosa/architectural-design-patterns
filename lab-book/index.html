@@ -521,7 +521,18 @@ pre.pygments .tok-il { color: #40a070 } /* Literal.Number.Integer.Long */
 <li><a href="#_lab_4_bulkhead">Lab 4: Bulkhead</a></li>
 <li><a href="#_lab_5_competing_consumers">Lab 5: Competing Consumers</a></li>
 <li><a href="#_lab_6_claim_check">Lab 6: Claim Check</a></li>
-<li><a href="#_lab_7_cqrs_command_query_responsibility_segregation">Lab 7: CQRS (Command Query Responsibility Segregation)</a></li>
+<li><a href="#_lab_7_cqrs_command_query_responsibility_segregation">Lab 7: CQRS (Command Query Responsibility Segregation)</a>
+<ul class="sectlevel2">
+<li><a href="#_launch_initial_containers">Launch Initial Containers</a></li>
+<li><a href="#_create_a_jdbc_connector">Create a JDBC Connector</a></li>
+<li><a href="#_create_a_mongodb_connector">Create a MongoDB Connector</a></li>
+<li><a href="#_run_the_data_generator">Run the Data Generator</a></li>
+<li><a href="#_view_the_postgres_database">View the Postgres Database</a></li>
+<li><a href="#_create_the_postgres_connector">Create the Postgres Connector</a></li>
+<li><a href="#_enrich_the_data_using_ksqldb">Enrich the Data using KSQLDB</a></li>
+<li><a href="#_create_a_mongodb_sink">Create a MongoDB Sink</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -853,6 +864,8 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <div class="sect1">
 <h2 id="_lab_7_cqrs_command_query_responsibility_segregation">Lab 7: CQRS (Command Query Responsibility Segregation)</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_launch_initial_containers">Launch Initial Containers</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -864,6 +877,13 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <li>
 <p>Login into <code>connect</code> container by using either <code>Attach Shell</code> on Gitpod or <code>docker exec -it connect /bin/bash</code></p>
 </li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_jdbc_connector">Create a JDBC Connector</h3>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Run the following in the container a JDBC Connect that reads from postgres - <code>confluent-hub install confluentinc/kafka-connect-jdbc:10.7.1</code></p>
 </li>
@@ -882,6 +902,13 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <li>
 <p>Answer <code>y</code> to <code>Do you want to update all detected configs? (yN)</code></p>
 </li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_mongodb_connector">Create a MongoDB Connector</h3>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Run the following in the container <code>confluent-hub install mongodb/kafka-connect-mongodb:1.10.0</code>, or whatever the latest version is from <a href="https://confluent.io/hub">Confluent Hub</a></p>
 </li>
@@ -906,6 +933,13 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <li>
 <p>Restart the container in GitPod or using <code>docker restart connect</code></p>
 </li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_the_data_generator">Run the Data Generator</h3>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Run the <code>CreateStocks</code> application by doing the following:</p>
 <div class="olist loweralpha">
@@ -917,11 +951,18 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <p><code>cd cqrs</code></p>
 </li>
 <li>
-<p>Run <code>mvn clean compile exec:java -Dexec.mainClass=com.xyzcorp.outbox.CreateStocks</code> to generate data.</p>
+<p>Run <code>mvn clean compile exec:java -Dexec.mainClass=com.evolutionnext.cqrs.CreateStocks</code> to generate data.</p>
 </li>
 </ol>
 </div>
 </li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_view_the_postgres_database">View the Postgres Database</h3>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Login into your <code>postgres</code> container using <code>Attach Shell</code> or <code>docker exec -it postgres /bin/bash</code></p>
 </li>
@@ -941,7 +982,111 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 <p>Run <code>SELECT * from stock_trade;</code> and ensure that the data exists</p>
 </li>
 <li>
-<p>Go to KsqlDB to create Stream</p>
+<p>Exit the <code>postgres</code> container by kbd:[CTRL+D] and typing <code>exit</code> in the shell</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_the_postgres_connector">Create the Postgres Connector</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log into the Confluent Control Center</p>
+</li>
+<li>
+<p>Select your cluster <code>controlcenter.cluster</code></p>
+</li>
+<li>
+<p>Select <em>Connect</em> in the menu</p>
+</li>
+<li>
+<p>Select the <em>connect_default</em> cluster</p>
+</li>
+<li>
+<p>Select the btn:[Add Connector] button</p>
+</li>
+<li>
+<p>Select the btn:[JdbcSourceConnector] button</p>
+</li>
+<li>
+<p>Add the following in the respective fields:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><strong>Key Converter Class</strong> - <code>io.confluent.connect.avro.AvroConverter</code></p>
+</li>
+<li>
+<p><strong>Value Converter Class</strong> - <code>io.confluent.connect.avro.AvroConverter</code></p>
+</li>
+<li>
+<p><strong>JDBC URL</strong> - <code>jdbc:postgresql://postgres:5432/</code></p>
+</li>
+<li>
+<p><strong>JDBC User</strong> - <code>docker</code></p>
+</li>
+<li>
+<p><strong>JDBC Pass</strong> - <code>docker</code></p>
+</li>
+<li>
+<p><strong>Database Dialect</strong> <code>PostgreSqlDatabaseDialect</code></p>
+</li>
+<li>
+<p><strong>Table Loading Mode</strong> <code>incrementing</code></p>
+</li>
+<li>
+<p><strong>Topic Prefix</strong> - <code>postgres_</code></p>
+</li>
+<li>
+<p><strong>Additional Properties</strong> -  <code>key.converter.schema.registry.url</code> set to  <code><a href="http://schema-registry:8081" class="bare">http://schema-registry:8081</a></code></p>
+</li>
+<li>
+<p><strong>Additional Properties</strong> - <code>value.converter.schema.registry.url</code> set to <code><a href="http://schema-registry:8081" class="bare">http://schema-registry:8081</a></code></p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Click btn:[Next]</p>
+</li>
+<li>
+<p>Verify the JSON output, then select btn:[Launch]</p>
+</li>
+<li>
+<p>Go back to the home page of the Confluent Control Center</p>
+</li>
+<li>
+<p>Go to the topics, and select <em>postgres_stock_trade</em></p>
+</li>
+<li>
+<p>Select the <em>Messages</em> menu</p>
+</li>
+<li>
+<p>View the data coming for data loading</p>
+</li>
+<li>
+<p>You can stop the database loading by initiating kbd:[CTRL+C]</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enrich_the_data_using_ksqldb">Enrich the Data using KSQLDB</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to KSQL-CLI Container by either attaching to the <code>ksqldb-cli</code> shell using <code>docker exec ksqldb-cli /bin/bash</code></p>
+</li>
+<li>
+<p>Run a ksql terminal that will attach to the KSQLDB Server using the following command</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span>$<span class="tok-w"> </span>ksql<span class="tok-w"> </span>http://ksqldb-server:8088</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the KSQLDB CLI, Create a Stream</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="ksql"><span></span>CREATE STREAM stock_trades WITH (
@@ -952,164 +1097,76 @@ VALUE_FORMAT = &#39;AVRO&#39;
 </div>
 </li>
 <li>
-<p>Go to KSQL-CLI Container by either attaching to the shell using <code>docker exec ksqldb-cli /bin/bash</code></p>
-</li>
-<li>
-<p>Run following commands</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p><code>ksql <a href="http://ksqldb-server:8088" class="bare">http://ksqldb-server:8088</a></code></p>
-</li>
-<li>
-<p><code>show streams;</code></p>
-</li>
-<li>
-<p><code>SET 'auto.offset.reset'='earliest';</code></p>
-</li>
-<li>
-<p><code>select * from STOCK_TRADES;</code></p>
-</li>
-<li>
-<p><code>select stock_symbol,count(<strong>) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes; 12.6 select stock_symbol,count(</strong>) as count, topk(stock_symbol, 5)  from STOCK_TRADES group by STOCK_SYMBOL emit changes</code>;</p>
-</li>
-<li>
-<p><code>create an aggregate topic - create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;</code></p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Setup MongoDB sink (read data from Aggregate Topic and push data to MongoDB)</p>
-</li>
-<li>
-<p>Configure MongoDB sink using mongosink.json that is in <code>src\main\resources</code></p>
-</li>
-<li>
-<p>Use mongodb-express container to see the results for the database</p>
-</li>
-<li>
-<p>Run the following in the container a MongoDB Connect that reads from postgres and do the rest as per Outbox pattern - <code>confluent-hub install confluentinc/kafka-connect-jdbc:10.7.1</code></p>
-</li>
-<li>
-<p>Select <code>2. / (where this tool is installed)</code></p>
-</li>
-<li>
-<p>Answer <code>y</code> to <code>Do you want to install this into /usr/share/confluent-hub-components?</code></p>
-</li>
-<li>
-<p>Answer <code>y</code> to <code>I agree to the software license agreement (yN)</code></p>
-</li>
-<li>
-<p>Answer <code>y</code> to <code>Do you want to continue?</code></p>
-</li>
-<li>
-<p>Answer <code>y</code> to <code>Do you want to update all detected configs? (yN)</code></p>
-</li>
-<li>
-<p>Exit the container using <code>exit</code></p>
-</li>
-<li>
-<p>Restart the container using <code>docker restart connect</code></p>
-</li>
-<li>
-<p>In your application <code>mvn exec:java -Dexec.mainClass=com.xyzcorp.outbox.CreateStocks</code> to generate data. You can also run in your IDE</p>
-</li>
-<li>
-<p>Login into your <code>postgres</code> container using <code>docker exec -it postgres /bin/bash</code></p>
-</li>
-<li>
-<p>Run the following: <code>export PGPASSWORD='docker'</code></p>
-</li>
-<li>
-<p>Run the following: <code>psql -d docker -U docker</code></p>
-</li>
-<li>
-<p>In the postgres shell run  <code>\dt</code> which will show all the tables</p>
-</li>
-<li>
-<p>In the postgres shell run <code>\d stock_trade</code>, which will show specific table schema</p>
-</li>
-<li>
-<p>Run <code>SELECT * from stock_trade;</code> and ensure that the data exists</p>
-</li>
-<li>
-<p>Setup the JDBC connector (reads data from source table and create Kafka topics)</p>
-</li>
-<li>
-<p>Key Converter Class - <code>io.confluent.connect.avro.AvroConverter</code></p>
-</li>
-<li>
-<p>Value Converter Class - <code>io.confluent.connect.avro.AvroConverter</code></p>
-</li>
-<li>
-<p>Database Connection and JDBC URL <code>jdbc:postgresql://postgres:5432/</code></p>
-</li>
-<li>
-<p>Database JDBC User &amp; Pass use <code>docker</code></p>
-</li>
-<li>
-<p>Database Dialect <code>PostgressSqlDatabaseDialect</code></p>
-</li>
-<li>
-<p>Database Mode <code>incrementing</code></p>
-</li>
-<li>
-<p>Topic Prefix - <code>postgres`_</code></p>
-</li>
-<li>
-<p>Additional Properties <code>key.converter.schema.registry.url</code> set to  <code><a href="http://schema-registry:8081" class="bare">http://schema-registry:8081</a></code></p>
-</li>
-<li>
-<p>Additional Properties &#8594; <code>value.converter.schema.registry.url</code> set to <code><a href="http://schema-registry:8081" class="bare">http://schema-registry:8081</a></code></p>
-</li>
-<li>
-<p>Go to KsqlDB to create Stream</p>
+<p>Enter into the CLI the following:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="ksql"><span></span>CREATE STREAM stock_trades WITH (
-KAFKA_TOPIC = &#39;postgres_stock_trade&#39;,
-VALUE_FORMAT = &#39;AVRO&#39;
-);</code></pre>
+<pre class="pygments highlight"><code data-lang="ksql"><span></span>SET &#39;auto.offset.reset&#39;=&#39;earliest&#39;;</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Go to KSQL-CLI Container by either attaching to the shell using <code>docker exec ksqldb-cli /bin/bash</code></p>
+<p>Show the live data coming from the source</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="ksql"><span></span>select * from STOCK_TRADES;</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p>Run following commands</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p><code>ksql <a href="http://ksqldb-server:8088" class="bare">http://ksqldb-server:8088</a></code></p>
+<p>Let&#8217;s try something fancy, let&#8217;s get a count of all the stocks and their count</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="ksql"><span></span>select stock_symbol,count(*) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes;</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>show streams;</code></p>
-</li>
-<li>
-<p><code>SET 'auto.offset.reset'='earliest';</code></p>
-</li>
-<li>
-<p><code>select * from STOCK_TRADES;</code></p>
-</li>
-<li>
-<p><code>select stock_symbol,count(<strong>) as count from STOCK_TRADES group by STOCK_SYMBOL emit changes; 12.6 select stock_symbol,count(</strong>) as count, topk(stock_symbol, 5)  from STOCK_TRADES group by STOCK_SYMBOL emit changes</code>;</p>
-</li>
-<li>
-<p><code>create an aggregate topic - create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;</code></p>
+<p>Create an aggregate topic from the above statement</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="ksql"><span></span>create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = &#39;JSON&#39;) as select STOCK_SYMBOL, AS_VALUE(STOCK_SYMBOL) as symbol, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;</code></pre>
+</div>
+</div>
 </li>
 </ol>
 </div>
-</li>
+</div>
+<div class="sect2">
+<h3 id="_create_a_mongodb_sink">Create a MongoDB Sink</h3>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Setup MongoDB sink (read data from Aggregate Topic and push data to MongoDB)</p>
 </li>
 <li>
-<p>Configure MongoDB sink using mongosink.json that is in <code>src\main\resources</code></p>
+<p>Go back to the <em>Confluent Control Center</em></p>
 </li>
 <li>
-<p>Use mongodb-express container to see the results for the database</p>
+<p>Click on the menu:Connect menu</p>
+</li>
+<li>
+<p>Click on the btn:[Upload connector config file] button</p>
+</li>
+<li>
+<p>Select the file from the <em>cqrs</em> module <em>src/main./resources/mongosink.json</em></p>
+</li>
+<li>
+<p>Click btn:[Next]</p>
+</li>
+<li>
+<p>Verify the JSON output, then select btn:[Launch]</p>
+</li>
+<li>
+<p>Open the browser to the <code>mongo-express</code> container using the admin username <code>admin</code> and password <code>pass</code></p>
+</li>
+<li>
+<p>Locate the database <em>STOCK_COUNT</em></p>
+</li>
+<li>
+<p>Locate the collection <em>stock_counts</em></p>
+</li>
+<li>
+<p>Click btn:[View]</p>
 </li>
 </ol>
 </div>
@@ -1121,9 +1178,10 @@ VALUE_FORMAT = &#39;AVRO&#39;
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-11-06 14:24:59 UTC
+Last updated 2023-11-06 14:42:01 UTC
 </div>
 </div>
 </body>
