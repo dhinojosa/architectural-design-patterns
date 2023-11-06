@@ -17,7 +17,7 @@ Daniel Hinojosa
 
 == Lab 1: ArchUnit
 
-. Open the _architectural-design-patterns_ project in your favorite editor or IDE
+. Open the _architectural-design-patterns_ project in GitPod
 . In the _hex-arch_ module, and in the _src/test/java_ directory, and in the `com.jitterted.ebp.blackjack` package create a file called _HexArchTest.java_
 . In the file, copy the following content
 +
