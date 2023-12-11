@@ -533,6 +533,7 @@ pre.pygments .tok-il { color: #40a070 } /* Literal.Number.Integer.Long */
 <li><a href="#_create_a_mongodb_sink">Create a MongoDB Sink</a></li>
 </ul>
 </li>
+<li><a href="#_lab_8_valet_key">Lab 8: Valet Key</a></li>
 </ul>
 </div>
 </div>
@@ -588,7 +589,7 @@ pre.pygments .tok-il { color: #40a070 } /* Literal.Number.Integer.Long */
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/stop.png" alt="stop" width="20%" height="20%">
+<img src="./images/stop.png" alt="stop" width="15%" height="15%">
 </div>
 </div>
 </div>
@@ -624,7 +625,7 @@ pre.pygments .tok-il { color: #40a070 } /* Literal.Number.Integer.Long */
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/stop.png" alt="stop" width="20%" height="20%">
+<img src="./images/stop.png" alt="stop" width="15%" height="15%">
 </div>
 </div>
 </div>
@@ -660,7 +661,7 @@ pre.pygments .tok-il { color: #40a070 } /* Literal.Number.Integer.Long */
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/stop.png" alt="stop" width="20%" height="20%">
+<img src="./images/stop.png" alt="stop" width="15%" height="15%">
 </div>
 </div>
 </div>
@@ -787,7 +788,7 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/stop.png" alt="stop" width="20%" height="20%">
+<img src="./images/stop.png" alt="stop" width="15%" height="15%">
 </div>
 </div>
 </div>
@@ -856,7 +857,7 @@ In the logs, look for <code>Partitions Revoked</code> and <code>Partitions Assig
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./images/stop.png" alt="stop" width="20%" height="20%">
+<img src="./images/stop.png" alt="stop" width="15%" height="15%">
 </div>
 </div>
 </div>
@@ -1187,10 +1188,129 @@ VALUE_FORMAT = &#39;AVRO&#39;
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_lab_8_valet_key">Lab 8: Valet Key</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the <em>value-key</em> folder in your Explorer</p>
+</li>
+<li>
+<p>Right click on <em>docker-compose.yml</em> and select <em>Compose Up</em></p>
+</li>
+<li>
+<p>Click on the Docker menu, and right-click on the vault
+container and select "Attach Shell"</p>
+</li>
+<li>
+<p>In the shell, enter the following</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span><span class="tok-nb">export</span><span class="tok-w"> </span><span class="tok-nv">VAULT_ADDR</span><span class="tok-o">=</span><span class="tok-s1">&#39;http://127.0.0.1:8200&#39;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Next enter your <code>root</code> credential</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span>$<span class="tok-w"> </span><span class="tok-nb">export</span><span class="tok-w"> </span><span class="tok-nv">VAULT_TOKEN</span><span class="tok-o">=</span><span class="tok-s2">&quot;root&quot;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Log into vault using <code>vault login</code>, when prompted for
+the password, enter <code>root</code></p>
+</li>
+<li>
+<p>Enable the database engine</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span>$<span class="tok-w"> </span>vault<span class="tok-w"> </span>secrets<span class="tok-w"> </span><span class="tok-nb">enable</span><span class="tok-w"> </span>database</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Next, you can configure your database configuration.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span>$<span class="tok-w"> </span>vault<span class="tok-w"> </span>write<span class="tok-w"> </span>database/config/my-postgresql-database<span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">plugin_name</span><span class="tok-o">=</span><span class="tok-s2">&quot;postgresql-database-plugin&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">allowed_roles</span><span class="tok-o">=</span><span class="tok-s2">&quot;my-role&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">connection_url</span><span class="tok-o">=</span><span class="tok-s2">&quot;postgresql://{{username}}:{{password}}@postgres:5432/postgres&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">username</span><span class="tok-o">=</span><span class="tok-s2">&quot;docker&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">password</span><span class="tok-o">=</span><span class="tok-s2">&quot;docker&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">password_authentication</span><span class="tok-o">=</span><span class="tok-s2">&quot;scram-sha-256&quot;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Next, let&#8217;s add a role. The role is how do we provide access to anyone who
+requires it.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span>$<span class="tok-w"> </span>vault<span class="tok-w"> </span>write<span class="tok-w"> </span>database/roles/my-role<span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">db_name</span><span class="tok-o">=</span><span class="tok-s2">&quot;my-postgresql-database&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">creation_statements</span><span class="tok-o">=</span><span class="tok-s2">&quot;CREATE ROLE \&quot;{{name}}\&quot; WITH LOGIN PASSWORD &#39;{{password}}&#39; VALID UNTIL &#39;{{expiration}}&#39;; \</span>
+<span class="tok-s2">        GRANT SELECT ON ALL TABLES IN SCHEMA public TO \&quot;{{name}}\&quot;;&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">default_ttl</span><span class="tok-o">=</span><span class="tok-s2">&quot;1h&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">    </span><span class="tok-nv">max_ttl</span><span class="tok-o">=</span><span class="tok-s2">&quot;24h&quot;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>We can then read a new credential, providing us with a valet-key
+used to communicate with the database directly. This also has a TTL. Vault
+can be used to implement the pattern, or you can use it to as password
+management system and credential rotation.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span>$<span class="tok-w"> </span>vault<span class="tok-w"> </span><span class="tok-nb">read</span><span class="tok-w"> </span>database/creds/my-role</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Right-click on the postgres container in the docker menu
+and select "Attach Shell".</p>
+</li>
+<li>
+<p>Once in the shell, log into your postgres:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span>$<span class="tok-w"> </span>psql<span class="tok-w"> </span>-h<span class="tok-w"> </span>localhost<span class="tok-w"> </span>-p<span class="tok-w"> </span><span class="tok-m">5432</span><span class="tok-w"> </span>-U<span class="tok-w"> </span>docker<span class="tok-w"> </span>-d<span class="tok-w"> </span>postgres</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Locate the credential that has just been created</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="sh"><span></span><span class="tok-nv">postgres</span><span class="tok-o">=</span><span class="tok-c1"># SELECT rolname FROM pg_roles;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Open port <code>8200</code> is your gitpod.io, and ensure
+that you can see the same information. This is the web interface.</p>
+</li>
+<li>
+<p>Go back to the Explorer in your Visual Studio Code and right-click on the <em>docker-compose.yml</em>
+in the <em>valet-key</em> folder and select "Docker Compose Down"</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/stop.png" alt="stop" width="15%" height="15%">
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-11-06 15:01:00 UTC
+Last updated 2023-12-11 12:24:51 UTC
 </div>
 </div>
 </body>

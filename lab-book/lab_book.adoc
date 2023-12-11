@@ -52,7 +52,7 @@ public class HexArchTest {
 . Run the test in either your editor, or run it using `mvn test` in the command line.
 . Does it violate our architectural rule?
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 2: Circuit Breaker
 
@@ -63,7 +63,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 . Change order with the server of the output
 . Try to change different settings in the `CircuitBreaker` and review the metrics
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 3: Retry
 
@@ -74,7 +74,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 . Change order with the server of the output
 . Try to change different settings in the `Retry` and review the metrics
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 4: Bulkhead
 
@@ -116,7 +116,7 @@ NOTE: In the logs, look for `Partitions Revoked` and `Partitions Assigned`. What
 +
 . Run `docker-compose down` in the _competing-consumers_ folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 6: Claim Check
 
@@ -142,7 +142,7 @@ image::create-myavro-topic.png[]
 . The idea here is that there a schema involved, and you are looking at the storage, the claim check is the `id` you see in this payload. This schema is not sent with the message
 . Run `docker-compose down` in the _claim-check_ module folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 7: CQRS (Command Query Responsibility Segregation)
 
@@ -284,7 +284,7 @@ create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select 
 
 image::stop.png[width=15%, height=15%, align=center]
 
-== Valet Key
+== Lab 8: Valet Key
 
 . Open the _value-key_ folder in your Explorer
 . Right click on _docker-compose.yml_ and select _Compose Up_
@@ -370,4 +370,4 @@ that you can see the same information. This is the web interface.
 . Go back to the Explorer in your Visual Studio Code and right-click on the _docker-compose.yml_
 in the _valet-key_ folder and select "Docker Compose Down"
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
