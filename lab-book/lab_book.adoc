@@ -163,7 +163,7 @@ image::stop.png[width="15%", height="15%", align="center"]
 
 === Create a MongoDB Connector
 
-. Run the following in the container `confluent-hub install mongodb/kafka-connect-mongodb:1.10.0`, or whatever the latest version is from https://confluent.io/hub[Confluent Hub]
+. Run the following in the container `confluent-hub install mongodb/kafka-connect-mongodb:1.11.2`, or whatever the latest version is from https://confluent.io/hub[Confluent Hub]
 . Select `2. / (where this tool is installed)`
 . Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
 . Answer `y` to `I agree to the software license agreement (yN)`
