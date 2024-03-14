@@ -52,7 +52,7 @@ public class HexArchTest {
 . Run the test in either your editor, or run it using `mvn test` in the command line.
 . Does it violate our architectural rule?
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 2: Circuit Breaker
 
@@ -63,7 +63,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 . Change order with the server of the output
 . Try to change different settings in the `CircuitBreaker` and review the metrics
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 3: Retry
 
@@ -74,7 +74,7 @@ image::stop.png[width="20%", height="20%", align="center"]
 . Change order with the server of the output
 . Try to change different settings in the `Retry` and review the metrics
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 4: Bulkhead
 
@@ -116,7 +116,7 @@ NOTE: In the logs, look for `Partitions Revoked` and `Partitions Assigned`. What
 +
 . Run `docker-compose down` in the _competing-consumers_ folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 6: Claim Check
 
@@ -142,7 +142,7 @@ image::create-myavro-topic.png[]
 . The idea here is that there a schema involved, and you are looking at the storage, the claim check is the `id` you see in this payload. This schema is not sent with the message
 . Run `docker-compose down` in the _claim-check_ module folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 7: CQRS (Command Query Responsibility Segregation)
 
@@ -283,3 +283,91 @@ create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select 
 . Click btn:[View]
 
 image::stop.png[width=15%, height=15%, align=center]
+
+== Lab 8: Valet Key
+
+. Open the _value-key_ folder in your Explorer
+. Right click on _docker-compose.yml_ and select _Compose Up_
+. Click on the Docker menu, and right-click on the vault
+container and select "Attach Shell"
+. In the shell, enter the following
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+export VAULT_ADDR='http://127.0.0.1:8200'
+----
++
+. Next enter your `root` credential
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ export VAULT_TOKEN="root"
+----
++
+. Log into vault using `vault login`, when prompted for
+the password, enter `root`
+. Enable the database engine
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ vault secrets enable database
+----
++
+. Next, you can configure your database configuration.
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ vault write database/config/my-postgresql-database \
+    plugin_name="postgresql-database-plugin" \
+    allowed_roles="my-role" \
+    connection_url="postgresql://{{username}}:{{password}}@postgres:5432/postgres" \
+    username="docker" \
+    password="docker" \
+    password_authentication="scram-sha-256"
+----
++
+. Next, let's add a role. The role is how do we provide access to anyone who
+requires it.
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ vault write database/roles/my-role \
+    db_name="my-postgresql-database" \
+    creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
+        GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+    default_ttl="1h" \
+    max_ttl="24h"
+----
++
+. We can then read a new credential, providing us with a valet-key
+used to communicate with the database directly. This also has a TTL. Vault
+can be used to implement the pattern, or you can use it to as password
+management system and credential rotation.
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ vault read database/creds/my-role
+----
++
+. Right-click on the postgres container in the docker menu
+and select "Attach Shell".
+. Once in the shell, log into your postgres:
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ psql -h localhost -p 5432 -U docker -d postgres
+----
++
+. Locate the credential that has just been created
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+postgres=# SELECT rolname FROM pg_roles;
+----
++
+. Open port `8200` is your gitpod.io, and ensure
+that you can see the same information. This is the web interface.
+. Go back to the Explorer in your Visual Studio Code and right-click on the _docker-compose.yml_
+in the _valet-key_ folder and select "Docker Compose Down"
+
+image::stop.png[width="15%", height="15%", align="center"]

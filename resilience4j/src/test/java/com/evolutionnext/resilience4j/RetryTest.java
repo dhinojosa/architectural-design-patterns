@@ -44,7 +44,7 @@ public class RetryTest {
         }
 
         RetryConfig config = RetryConfig.<MyHttpResponse>custom()
-                                        .maxAttempts(5) //change this to 5
+                                        .maxAttempts(2) //change this to 5
                                         .waitDuration(Duration.ofMillis(1000))
                                         .retryOnResult(response -> response.status() == 500)
                                         .retryOnException(e -> e instanceof WebServiceException)
@@ -64,9 +64,9 @@ public class RetryTest {
     private void displayStatus(Retry retry) {
         System.out.format("After retry");
         Retry.Metrics metrics = retry.getMetrics();
-        System.out.format("\tFailed Calls without Retry: %d\n", metrics.getNumberOfFailedCallsWithoutRetryAttempt());
-        System.out.format("\tNumber of Failed Calls: %d\n", metrics.getNumberOfFailedCallsWithRetryAttempt());
-        System.out.format("\tSuccessful Calls: %d\n", metrics.getNumberOfSuccessfulCallsWithoutRetryAttempt());
-        System.out.format("\tSuccessful Calls: %d\n", metrics.getNumberOfSuccessfulCallsWithRetryAttempt());
+        System.out.format("\tNumber of Failed Calls without Retry: %d\n", metrics.getNumberOfFailedCallsWithoutRetryAttempt());
+        System.out.format("\tNumber of Failed Calls with Retry: %d\n", metrics.getNumberOfFailedCallsWithRetryAttempt());
+        System.out.format("\tSuccessful Calls Without Retry: %d\n", metrics.getNumberOfSuccessfulCallsWithoutRetryAttempt());
+        System.out.format("\tSuccessful Calls With Retry: %d\n", metrics.getNumberOfSuccessfulCallsWithRetryAttempt());
     }
 }
