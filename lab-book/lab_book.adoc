@@ -106,7 +106,7 @@ image::create-topic.png[]
 +
 NOTE: In the logs, look for `Partitions Revoked` and `Partitions Assigned`. What you are looking for is a consumer picking up the slack of another consumer.
 +
-. Run `docker-compose down` in the _competing-consumers_ folder, by selecting the _docker_compose.yml_ file, right clicking, and selecting "Compose Down"
+. Run `docker-compose down` in the _competing-consumers_ folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
 image::stop.png[width="20%", height="20%", align="center"]
 
