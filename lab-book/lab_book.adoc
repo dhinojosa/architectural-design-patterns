@@ -14,11 +14,12 @@ Daniel Hinojosa
 :customcss: custom.css
 :topic: state=title
 :icons: font
+:experimental:
 
 == Lab 1: ArchUnit
 
-. Open the _architectural-design-patterns_ project in your favorite editor or IDE
-. In the _src/test/java_ directory, and in the `com.jitterted.ebp.blackjack` package create a file called _HexArchTest.java_
+. Open the _architectural-design-patterns_ project in GitPod
+. In the _hex-arch_ module, and in the _src/test/java_ directory, and in the `com.jitterted.ebp.blackjack` package create a file called _HexArchTest.java_
 . In the file, copy the following content
 +
 [source, java, subs="attributes,quotes,verbatim"]
@@ -51,40 +52,47 @@ public class HexArchTest {
 . Run the test in either your editor, or run it using `mvn test` in the command line.
 . Does it violate our architectural rule?
 
-image::stop.png[width="20%", height="20%", align="center"]
-
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 2: Circuit Breaker
 
-. In the _src/test/java_ directory, and in the `com.xyzcorp.resilience4j` package, open _CircuitBreakTest.java_
-. Run the `TestCircuitBreaker` test and notice how it handles failure
+. In the _resilience4j_ module, in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _CircuitBreakTest.java_
+. Run the `TestCircuitBreaker` test and notice how it handles failure. In Gitpod do the following, so you can see the output:
+.. `cd resilience4j`
+.. `mvn test -Dtest=CircuitBreakerTest#testCircuitBreaker`
 . Change order with the server of the output
 . Try to change different settings in the `CircuitBreaker` and review the metrics
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 3: Retry
 
-. In the _src/test/java_ directory, and in the `com.xyzcorp.resilience4j` package, open _RetryTest.java_
-. Run the `testRetry` test and notice how it handles failure
+. In the _resilience4j_ module, in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _RetryTest.java_
+. Run the `testRetry` test and notice how it handles failure. In Gitpod do the following, so you can see the output:
+.. `cd resilience4j`
+.. `mvn test -Dtest=RetryTest#testRetry`
 . Change order with the server of the output
 . Try to change different settings in the `Retry` and review the metrics
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 4: Bulkhead
 
-. In the _src/test/java_ directory, and in the `com.xyzcorp.resilience4j` package, open _BulkheadTest.java_
-. Run the `testSemaphoneBulkhead` test and notice how it handles saturation
+. In the _resilience4j_ module, in the _src/test/java_ directory, and in the _src/test/java_ directory, and in the `com.evolutionnext.resilience4j` package, open _BulkheadTest.java_
+. Run the `testSemaphoreBulkhead` test and notice how it handles saturation. In Gitpod do the following, so you can see the output:
+.. `cd resilience4j`
+.. `mvn test -Dtest=BulkheadTest#testSemaphoreBulkhead`
 . Try to change different settings in the `Bulkhead` and review the metrics
-. Run the `testThreadPoolBulkhead` test and notice how it handles saturation
+. Run the `testThreadPoolBulkhead` test and notice how it handles saturation. In Gitpod do the following, so you can see the output:
+.. `cd resilience4j`
+.. `mvn test -Dtest=BulkheadTest#testThreadPoolBulkhead`
 . Try to change different settings in the `ThreadPoolBulkhead` and review the metrics
 
 image::stop.png[width="20%", height="20%", align="center"]
 
 == Lab 5: Competing Consumers
 
-. Open the _competing-consumers_ folder
+. Open the _competing-consumers_ module folder
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `control-center`
 . Wait until all the components are loaded that you can monitor with `docker ps`
 . In your browser of choice, open port `9021` in your gitpod ports menu
@@ -98,22 +106,22 @@ image::control-center.png[]
 +
 image::create-topic.png[]
 +
-. Go back to the _competing-consumers_ folder
+. Go back to the _competing-consumers_ module folder
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and just select `my-producer`, `my-consumer-1`, `my-consumer-2`, `my-consumer-3`
-. View the logs of the running consumers by right clicking on the container in the Docker menu and selecting "View Logs"
-. Knock one of the consumers off by right clicking one of the consumer containers, like `my-consumer-3` and select and view the logs of both `my-consumer-2` and `my-consumer-1`
+. View the logs of the running consumers by right-clicking on the container in the Docker menu and selecting "View Logs"
+. Knock one of the consumers off by right-clicking one of the consumer containers, like `my-consumer-3` and select and view the logs of both `my-consumer-2` and `my-consumer-1`
 . What do the logs say?
 +
 NOTE: In the logs, look for `Partitions Revoked` and `Partitions Assigned`. What you are looking for is a consumer picking up the slack of another consumer.
 +
 . Run `docker-compose down` in the _competing-consumers_ folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
 == Lab 6: Claim Check
 
-. Navigate to your _architectural-design-patterns_ project and into the _claim_cqrs_ folder
-. Right click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `control-center`
+. Navigate to your _architectural-design-patterns_ project and into the _claim-check_ module
+. Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `control-center`
 . Wait until all the components are loaded
 . In your browser of choice, open port `9021` in your gitpod ports menu
 +
@@ -126,42 +134,240 @@ image::control-center.png[]
 +
 image::create-myavro-topic.png[]
 +
-. Navigate to your _architectural-design-patterns_ project and into the _claim_cqrs_ folder
-. Right click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `my-avro-producer`, `my-avro-consumer-1`, `my-avro-consumer-2`, `my-avro-consumer-3`
-. Open port 8081, from the ports menu, Visit `http://<url>:8081/subjects` and what do you see? Note one of the subjects, `my-avro-orders-value`
-. Visit `http://<url>:8081/subjects/my-avro-orders-value/versions` and what do you see? Note the version number
-. Visit `http://<url>:8081/subjects/my-avro-orders-value/versions/{versionId}` where you will replace `{version}` with the version you noted in the previous step. What do you see?
-. The idea here is that there a schema involved and you are looking at the storage, the claim check is the `id` you see in this payload. This schema is not sent with the message
-. Keep this instances up in docker for the next lab
+. Navigate to your _architectural-design-patterns_ project and into the _claim-check_ module once again.
+. Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `my-avro-producer`, `my-avro-consumer-1`, `my-avro-consumer-2`, `my-avro-consumer-3`
+. Open port 8081, from the ports menu in Gitpod. Visit `http://<gitpod-url>/subjects` and what do you see? Note one of the subjects, `my-avro-orders-value`
+. Visit `http://<gitpod-url>/subjects/my-avro-orders-value/versions` and what do you see? Note the version number
+. Visit `http://<gitpod-url>/subjects/my-avro-orders-value/versions/{versionId}` where you will replace `{versionId}` with the version you noted in the previous step. What do you see?
+. The idea here is that there a schema involved, and you are looking at the storage, the claim check is the `id` you see in this payload. This schema is not sent with the message
+. Run `docker-compose down` in the _claim-check_ module folder, by selecting the _docker_compose.yml_ file, right-clicking, and selecting "Compose Down"
 
-image::stop.png[width="20%", height="20%", align="center"]
+image::stop.png[width="15%", height="15%", align="center"]
 
-== Lab 7: CQRS
+== Lab 7: CQRS (Command Query Responsibility Segregation)
 
-. In the Docker menu, and in containers locate the broker container, typically listed under the term _cp-ksqldb-server_
-. Right click on the container, and select "Attach Shell"
+=== Launch Initial Containers
+
+. Open the _cqrs_ module folder
+. Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `connect ksqldb-cli postgres control-center mongo mongo-express`
+. Login into `connect` container by using either `Attach Shell` on Gitpod or `docker exec -it connect /bin/bash`
+
+=== Create a JDBC Connector
+
+. Run the following in the container a JDBC Connect that reads from postgres - `confluent-hub install confluentinc/kafka-connect-jdbc:10.7.1`
+. Select `2. / (where this tool is installed)`
+. Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
+. Answer `y` to `I agree to the software license agreement (yN)`
+. Answer `y` to `Do you want to continue?`
+. Answer `y` to `Do you want to update all detected configs? (yN)`
+
+=== Create a MongoDB Connector
+
+. Run the following in the container `confluent-hub install mongodb/kafka-connect-mongodb:1.11.2`, or whatever the latest version is from https://confluent.io/hub[Confluent Hub]
+. Select `2. / (where this tool is installed)`
+. Answer `y` to `Do you want to install this into /usr/share/confluent-hub-components?`
+. Answer `y` to `I agree to the software license agreement (yN)`
+. Answer `y` to `Do you want to continue?`
+. Answer `y` to `Do you want to update all detected configs? (yN)`
+. Exit the container using `exit`
+. Restart the container in GitPod or using `docker restart connect`
+
+=== Run the Data Generator
+
+. Run the `CreateStocks` application by doing the following:
+.. Create a new terminal
+.. `cd cqrs`
+.. Run `mvn clean compile exec:java -Dexec.mainClass=com.evolutionnext.cqrs.CreateStocks` to generate data.
+
+=== View the Postgres Database
+
+. Login into your `postgres` container using `Attach Shell` or `docker exec -it postgres /bin/bash`
+. Run the following: `export PGPASSWORD='docker'`
+. Run the following: `psql -d docker -U docker`
+. In the Postgres shell run  `\dt` which will show all the tables
+. In the Postgres shell run `\d stock_trade`, which will show specific table schema
+. Run `SELECT * from stock_trade;` and ensure that the data exists
+. Exit the `postgres` container by kbd:[CTRL+D] and typing `exit` in the shell
+
+=== Create the Postgres Connector
+
+. Log into the Confluent Control Center
+. Select your cluster `controlcenter.cluster`
+. Select _Connect_ in the menu
+. Select the _connect_default_ cluster
+. Select the btn:[Add Connector] button
+. Select the btn:[JdbcSourceConnector] button
+. Add the following in the respective fields:
+.. *Key Converter Class* - `io.confluent.connect.avro.AvroConverter`
+.. *Value Converter Class* - `io.confluent.connect.avro.AvroConverter`
+.. *JDBC URL* - `jdbc:postgresql://postgres:5432/`
+.. *JDBC User* - `docker`
+.. *JDBC Password* - `docker`
+.. *Database Dialect* `PostgreSqlDatabaseDialect`
+.. *Table Loading Mode* `incrementing`
+.. *Topic Prefix* - `postgres_`
+.. *Additional Properties* -  `key.converter.schema.registry.url` set to  `http://schema-registry:8081`
+.. *Additional Properties* - `value.converter.schema.registry.url` set to `http://schema-registry:8081`
+. Click btn:[Next]
+. Verify the JSON output, then select btn:[Launch]
+. Go back to the home page of the Confluent Control Center
+. Go to the topics, and select _postgres_stock_trade_
+. Select the _Messages_ menu
+. View the data coming for data loading
+. You can stop the database loading by initiating kbd:[CTRL+C]
+
+=== Enrich the Data using KSQLDB
+
+
+. Go to KSQL-CLI Container by either attaching to the `ksqldb-cli` shell using `docker exec ksqldb-cli /bin/bash`
+. Run a ksql terminal that will attach to the KSQLDB Server using the following command
 +
-image::AttachShellKSQLDB.png[width=30%, height=30%]
-+
-. In your shell, login using `ksql http://localhost:8088`, it should look something like the following:
-+
-image::KSQLDBIntro.png[]
-+
-. Enter the following commands
-+
-[source, ksql, subs="attributes,quotes,verbatim"]
+[source, sh, subs="attributes,quotes,verbatim"]
 ----
-CREATE STREAM my_avro_orders \
-(total BIGINT, shipping VARCHAR, state VARCHAR, discount DOUBLE, \
-gender VARCHAR) WITH (kafka_topic='my-avro-orders', value_format='AVRO');
+$ ksql http://ksqldb-server:8088
 ----
 +
-. Select `auto.offset.reset` to `earliest` by calling: `SET 'auto.offset.reset' = 'earliest';`
-. In your editor, enter the following to create non-persistent query using `SELECT * from my_avro_orders emit changes;` and review the results
-. In your editor, enter the following to create another non-persistent query using `SELECT state, shipping from my_avro_orders emit changes;` and review the results
-. In your editor, enter the following to create another non-persistent query using `SELECT state, count(*) as count from my_avro_orders group by state emit changes;` and review the results
-. In your editor, enter the following to create another persistent query using `CREATE TABLE my_avro_state_count AS SELECT state, count(*) as count from my_avro_orders group by state emit changes;`
-. Click on _Topics_ on the left hand menu, notice the new topic _MY_AVRO_STATE_COUNT_, view the messages, this is a materialized view that we can port over to a database.
-. When done, navigate to your _architectural-design-patterns_ project and into the _claim_cqrs_ folder, right click on _docker-compose.yml_ and select "Compose Down"
+. In the KSQLDB CLI, Create a Stream
++
+[source,ksql]
+----
+CREATE STREAM stock_trades WITH (
+KAFKA_TOPIC = 'postgres_stock_trade',
+VALUE_FORMAT = 'AVRO'
+);
+----
++
+. Enter into the CLI the following:
++
+[source,ksql]
+----
+SET 'auto.offset.reset'='earliest';
+----
++
+. Show the live data coming from the source
++
+[source,ksql]
+----
+select * from STOCK_TRADES emit changes;
+----
++
+. Let's try something fancy, let's get a count of all the stocks and their count
++
+[source,ksql]
+----
+select STOCK_SYMBOL, AS_VALUE(STOCK_SYMBOL) as symbol, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;
+----
++
+. Create an aggregate topic from the above statement
++
+[source,ksql]
+----
+create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select STOCK_SYMBOL, AS_VALUE(STOCK_SYMBOL) as symbol, count(*) as count from STOCK_TRADES group by stock_symbol EMIT CHANGES;
+----
+. Go to the topics, and select _STOCK_COUNT_
+. Select the _Messages_ menu
+. View the data coming for data loading
 
-image::stop.png[width="20%", height="20%", align="center"]
+=== Create a MongoDB Sink
+
+. Go back to the _Confluent Control Center_
+. Click on the menu:Connect[] menu
+. Select the _connect_default_ cluster
+. Click on the btn:[Upload connector config file] button
+. Select the file from the _cqrs_ module _src/main./resources/mongosink.json_
+. Click btn:[Next]
+. Verify the JSON output, then select btn:[Launch]
+. Open the browser to the `mongo-express` container, port `10002` using the admin username `admin` and password `pass`
+. Locate the database _STOCK_COUNT_
+. Locate the collection _stock_counts_
+. Click btn:[View]
+
+image::stop.png[width=15%, height=15%, align=center]
+
+== Lab 8: Valet Key
+
+. Open the _value-key_ folder in your Explorer
+. Right click on _docker-compose.yml_ and select _Compose Up_
+. Click on the Docker menu, and right-click on the vault
+container and select "Attach Shell"
+. In the shell, enter the following
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+export VAULT_ADDR='http://127.0.0.1:8200'
+----
++
+. Next enter your `root` credential
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ export VAULT_TOKEN="root"
+----
++
+. Log into vault using `vault login`, when prompted for
+the password, enter `root`
+. Enable the database engine
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ vault secrets enable database
+----
++
+. Next, you can configure your database configuration.
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ vault write database/config/my-postgresql-database \
+    plugin_name="postgresql-database-plugin" \
+    allowed_roles="my-role" \
+    connection_url="postgresql://{{username}}:{{password}}@postgres:5432/postgres" \
+    username="docker" \
+    password="docker" \
+    password_authentication="scram-sha-256"
+----
++
+. Next, let's add a role. The role is how do we provide access to anyone who
+requires it.
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ vault write database/roles/my-role \
+    db_name="my-postgresql-database" \
+    creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
+        GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+    default_ttl="1h" \
+    max_ttl="24h"
+----
++
+. We can then read a new credential, providing us with a valet-key
+used to communicate with the database directly. This also has a TTL. Vault
+can be used to implement the pattern, or you can use it to as password
+management system and credential rotation.
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ vault read database/creds/my-role
+----
++
+. Right-click on the postgres container in the docker menu
+and select "Attach Shell".
+. Once in the shell, log into your postgres:
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+$ psql -h localhost -p 5432 -U docker -d postgres
+----
++
+. Locate the credential that has just been created
++
+[source, sh, subs="attributes,quotes,verbatim"]
+----
+postgres=# SELECT rolname FROM pg_roles;
+----
++
+. Open port `8200` is your gitpod.io, and ensure
+that you can see the same information. This is the web interface.
+. Go back to the Explorer in your Visual Studio Code and right-click on the _docker-compose.yml_
+in the _valet-key_ folder and select "Docker Compose Down"
+
+image::stop.png[width="15%", height="15%", align="center"]

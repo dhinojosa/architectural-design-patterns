@@ -1,0 +1,19 @@
+{
+  "name": "mongo-tutorial-sink",
+  "config": {
+      "connector.class": "com.mongodb.kafka.connect.MongoSinkConnector",
+      "topics": "STOCK_COUNT",
+      "connection.uri": "mongodb://root:example@mongo",
+      "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+      "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+      "transforms": "HoistField",
+      "transforms.HoistField.type": "org.apache.kafka.connect.transforms.HoistField$Key",
+      "transforms.HoistField.field": "_id",
+      "value.converter.schemas.enable": false,
+      "database": "STOCK_COUNT",
+      "collection": "stock_counts",
+      "document.id.strategy": "com.mongodb.kafka.connect.sink.processor.id.strategy.ProvidedInKeyStrategy",
+      "value.converter.schema.registry.url" : "http://schema-registry:8081",
+      "key.converter.schema.registry.url" : "http://schema-registry:8081"
+  }
+}
