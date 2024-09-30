@@ -1,0 +1,17 @@
+services:
+    fussy-server:
+        image: dhinojosa/fussy-server:1.0.3
+        ports:
+            - "8085:8000"
+        environment:
+            - FAILURE_RATE=.02
+            - SUCCESS_RATE=.96
+            - LATENCY_RATE=.02
+            - LATENCY_DURATION=60
+    envoy:
+        image: envoyproxy/envoy:v1.31.0
+        volumes:
+            - ./envoy.yml:/etc/envoy/envoy.yaml:ro
+        ports:
+            - "8086:80"  # Proxy service port
+            - "9091:9091"
