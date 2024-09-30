@@ -90,7 +90,24 @@ image::stop.png[width="15%", height="15%", align="center"]
 
 image::stop.png[width="20%", height="20%", align="center"]
 
-== Lab 5: Competing Consumers
+== Lab 5: Ambassador Pattern
+
+. In the _ambassador_ module, perform a `docker-compose up` on the _docker-compose.yml_ file.
+. Read the _docker-compose.yml_, This will run two instances:
+.. A fussy-server, a server that is not always running because either it is down, or it is latent
+.. An Envoy Ambassador
+. We are trying to connect through the ambassador to the fussy server, a custom-made from Java 18's Simple Java Web Server
+. Read the _envoy.yml_ file, and view the contents. We will not be giving the connection a chance, and we should see that the circuit breaker will trip given the circumstances.  Also notice Envoy's circuit breaker is a little different from *resilience4j* in that it is purely networking
+. Open port `8086`, and the `/service` path, and ensure that the web application is running. Run it a few times you will either see it succeed, fail, or become latent.
+. Open port `9091`, and the `/stats` path, and keep this open
+. Run the _throttle.sh_ file to give your Envoy a workout, you may have to `chmod +x throttle.sh` in order to run
+. Notice in your `/stats` page that circuit breaker has tripped.
+. Stop the `throttle.sh` with a kbd:[CTRL+C], and then refresh the `/stats` page, and you will see that circuit is back to close.
+. Perform a `docker-compose down` on the _docker-compose.yml_ file by right-clicking on the _docker-compose.yml_ file and selecting "Compose Down"
+
+image::stop.png[width="20%", height="20%", align="center"]
+
+== Lab 6: Competing Consumers
 
 . Open the _competing-consumers_ module folder
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `control-center`
@@ -118,7 +135,7 @@ NOTE: In the logs, look for `Partitions Revoked` and `Partitions Assigned`. What
 
 image::stop.png[width="15%", height="15%", align="center"]
 
-== Lab 6: Claim Check
+== Lab 7: Claim Check
 
 . Navigate to your _architectural-design-patterns_ project and into the _claim-check_ module
 . Right-click on the _docker-compose.yml_ file and select "Compose Up - Select Services", deselect all the checkmarks, and select `control-center`
@@ -144,7 +161,7 @@ image::create-myavro-topic.png[]
 
 image::stop.png[width="15%", height="15%", align="center"]
 
-== Lab 7: CQRS (Command Query Responsibility Segregation)
+== Lab 8: CQRS (Command Query Responsibility Segregation)
 
 === Launch Initial Containers
 
@@ -284,9 +301,9 @@ create table stock_count with (PARTITIONS = 3, VALUE_FORMAT = 'JSON') as select 
 
 image::stop.png[width=15%, height=15%, align=center]
 
-== Lab 8: Valet Key
+== Lab 9: Valet Key
 
-. Open the _value-key_ folder in your Explorer
+. Open the _valet-key_ folder in your Explorer
 . Right click on _docker-compose.yml_ and select _Compose Up_
 . Click on the Docker menu, and right-click on the vault
 container and select "Attach Shell"
@@ -305,7 +322,22 @@ $ export VAULT_TOKEN="root"
 ----
 +
 . Log into vault using `vault login`, when prompted for
-the password, enter `root`
+the token when it says `Token (will be hidden):`, enter `root`.
+. Note the `token_accessor` created since you will use that later. For example:
++
+[source]
+----
+Key                  Value
+---                  -----
+token                root
+token_accessor       whgmCZZYjFSNO3HoNN48rJYW
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+----
++
 . Enable the database engine
 +
 [source, sh, subs="attributes,quotes,verbatim"]
@@ -365,8 +397,10 @@ $ psql -h localhost -p 5432 -U docker -d postgres
 postgres=# SELECT rolname FROM pg_roles;
 ----
 +
+. You can also run `quit` and try logging in using a new credential. For example, `psql -h localhost -p 5432 -U v-token-my-role-2rCtb7HogjBLH56Imwtf-1727661146 -W -d docker`
+. Login in with your password and see if it works
 . Open port `8200` is your gitpod.io, and ensure
-that you can see the same information. This is the web interface.
+that you can see the same information. This is the web interface. Use the token that was presented in the terminal of vault.
 . Go back to the Explorer in your Visual Studio Code and right-click on the _docker-compose.yml_
 in the _valet-key_ folder and select "Docker Compose Down"
 
