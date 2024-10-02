@@ -54,11 +54,11 @@ public class Main {
                 }
                 response = "{\"status\": \"success\", \"data\": \"Here is your data after a delay!\"}";
                 statusCode = 200;
-                System.out.println("[%s] Service called with latency", ZonedDateTime.now());
+                System.out.printf("[%s] Service called with latency", ZonedDateTime.now());
             } else {
                 response = "{\"status\": \"error\", \"message\": \"Service failure!\"}";
                 statusCode = 500;
-                System.out.println("[%s] Service called with failure", ZonedDateTime.now());
+                System.out.printf("[%s] Service called with failure", ZonedDateTime.now());
             }
 
             exchange.getResponseHeaders().set("Content-Type", "application/json");
