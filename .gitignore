@@ -5,3 +5,4 @@ target/
 **/*.swo
 **/*.iml
 lab_book.html
+**/*.class
