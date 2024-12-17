@@ -1,6 +1,6 @@
 services:
     fussy-server:
-        image: dhinojosa/fussy-server:1.0.3
+        image: dhinojosa/fussy-server:1.0.4
         ports:
             - "8085:8000"
         environment:
@@ -13,5 +13,5 @@ services:
         volumes:
             - ./envoy.yml:/etc/envoy/envoy.yaml:ro
         ports:
-            - "8086:80"  # Proxy service port
+            - "8086:8086"  # Proxy service port
             - "9091:9091" # The admin port
